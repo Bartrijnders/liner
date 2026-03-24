@@ -39,6 +39,7 @@ const EMPTY_FORM = {
   show_naam: '',
   show_begindatum: '',
   show_einddatum: '',
+  target_language: 'NL',
 }
 
 export default function ProjectModal({ open, onClose, onSaved, klanten: initialKlanten }: Props) {
@@ -103,6 +104,7 @@ export default function ProjectModal({ open, onClose, onSaved, klanten: initialK
       show_naam: form.show_naam || null,
       show_begindatum: form.show_begindatum || null,
       show_einddatum: form.show_einddatum || null,
+      target_language: form.target_language,
     })
 
     if (error) {
@@ -257,6 +259,20 @@ export default function ProjectModal({ open, onClose, onSaved, klanten: initialK
                 onChange={(e) => set('show_einddatum', e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label>Uitvoertaal</Label>
+            <Select value={form.target_language} onValueChange={(v) => set('target_language', v ?? 'NL')}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="NL">Nederlands</SelectItem>
+                <SelectItem value="EN">English</SelectItem>
+                <SelectItem value="DE">Deutsch</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}

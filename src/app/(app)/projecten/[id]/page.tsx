@@ -18,7 +18,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       .single(),
     supabase
       .from('offertes')
-      .select('id, bestandsnaam, status, fout_melding, created_at')
+      .select('id, bestandsnaam, status, fout_melding, storage_path, created_at')
       .eq('project_id', id)
       .order('created_at', { ascending: false }),
   ])

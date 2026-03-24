@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 
 const client = new Anthropic()
 
-interface OrderregelExtract {
+export interface Agent1Resultaat {
   regelnummer: number
   omschrijving: string
   details: string | null
@@ -10,9 +10,12 @@ interface OrderregelExtract {
   eenheid: string | null
   stukprijs: string | null
   totaalprijs: string | null
+  cleanDesc: string
+  cleanDetails: string | null
+  categoryHint: string | null
 }
 
-export async function extractOrderregels(pdfTekst: string): Promise<OrderregelExtract[]> {
+export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 4096,
@@ -32,6 +35,9 @@ Elk object in de array heeft deze velden:
 - eenheid: string | null (m, st, m², stuk, etc. — extraheer uit hoeveelheid als mogelijk)
 - stukprijs: string | null (prijs per eenheid, inclusief valutasymbool)
 - totaalprijs: string | null (totaalprijs voor de regel)
+- cleanDesc: string (genormaliseerde omschrijving: lowercase, verwijder artikelnummers/codes, behoud producttype en materiaal)
+- cleanDetails: string | null (genormaliseerde details, of null als geen details)
+- categoryHint: string | null (beste schatting van de productcategorie, bijv. "Bekabeling", "Bevestiging", "Verlichting" — of null als onduidelijk)
 
 Regels om te negeren: kopteksten, tussentitels, subtotalen, BTW-regels, en lege regels.
 
@@ -46,13 +52,12 @@ Geef nu de JSON array:`,
   })
 
   const content = response.content[0]
-  if (content.type !== 'text') throw new Error('Onverwacht antwoord van Claude')
+  if (content.type !== 'text') throw new Error('Onverwacht antwoord van Agent 1')
 
-  // Strip markdown code blocks die sommige modellen toevoegen (```json ... ```)
   let jsonText = content.text.trim()
   if (jsonText.startsWith('```')) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
   }
 
-  return JSON.parse(jsonText) as OrderregelExtract[]
+  return JSON.parse(jsonText) as Agent1Resultaat[]
 }

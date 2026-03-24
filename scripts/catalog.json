@@ -1,0 +1,1870 @@
+{
+  "Succes": true,
+  "Subgroups": [
+    {
+      "Name": "Flooring",
+      "Description": null,
+      "RowID": 21,
+      "MatchTerms": [
+        " Boden",
+        " Flooring",
+        "Vloeren"
+      ],
+      "Elements": [
+        {
+          "name": "Raised floor",
+          "Translation_NL": "verhoogde vloer",
+          "Translation_EN": " raised floor",
+          "Translation_DE": " erhöhter Fußboden"
+        },
+        {
+          "name": "Raised system floor",
+          "Translation_NL": "verhoogde systeemvloer",
+          "Translation_EN": " raised system floor",
+          "Translation_DE": " erhöhter Systemboden"
+        },
+        {
+          "name": "Sub floor",
+          "Translation_NL": "ondervloer",
+          "Translation_EN": " sub floor",
+          "Translation_DE": " Unterboden"
+        },
+        {
+          "name": "Plate material",
+          "Translation_NL": "plaatmateriaal",
+          "Translation_EN": " plate material",
+          "Translation_DE": " Plattenmaterial"
+        },
+        {
+          "name": "Laminate floor",
+          "Translation_NL": "laminaat",
+          "Translation_EN": " laminate floor",
+          "Translation_DE": " Laminatboden"
+        },
+        {
+          "name": "Carpet",
+          "Translation_NL": "tapijt",
+          "Translation_EN": " carpet",
+          "Translation_DE": " Teppichboden"
+        },
+        {
+          "name": "Carpet tiles",
+          "Translation_NL": "tapijttegels",
+          "Translation_EN": " carpet tiles",
+          "Translation_DE": " Teppichfliesen"
+        },
+        {
+          "name": "Vinyl",
+          "Translation_NL": "vinyl",
+          "Translation_EN": " vinyl",
+          "Translation_DE": " Vinyl"
+        },
+        {
+          "name": "Plastispan",
+          "Translation_NL": "plastispan",
+          "Translation_EN": " plastispan",
+          "Translation_DE": " Plastispan"
+        },
+        {
+          "name": "Access ramp",
+          "Translation_NL": "invalidenopgang",
+          "Translation_EN": " access ramp",
+          "Translation_DE": " Behindertenaufgang"
+        },
+        {
+          "name": "Protection foil during build-up",
+          "Translation_NL": " beschermende folie tijdens opbouw",
+          "Translation_EN": " protection foil during build-up",
+          "Translation_DE": " Schutzabdeckung während Aufbau"
+        },
+        {
+          "name": "Edging strip",
+          "Translation_NL": "afwerkstrip",
+          "Translation_EN": " edging strip",
+          "Translation_DE": " Abschlusskante"
+        },
+        {
+          "name": "Edging strip",
+          "Translation_NL": "randafwerking",
+          "Translation_EN": " edging strip",
+          "Translation_DE": " Abschlusskante"
+        },
+        {
+          "name": "Aluminum edging strip",
+          "Translation_NL": " aluminium hoekprofiel",
+          "Translation_EN": " aluminum edging strip",
+          "Translation_DE": " Aluminium Band"
+        },
+        {
+          "name": "Aluminum edging strip with plinth",
+          "Translation_NL": "aluminium hoekprofiel met plint",
+          "Translation_EN": " aluminum edging strip with plinth",
+          "Translation_DE": " Aluminium Band mit Leiste"
+        },
+        {
+          "name": "Platform",
+          "Translation_NL": "vloer",
+          "Translation_EN": " platform",
+          "Translation_DE": " Boden"
+        },
+        {
+          "name": "Wit hoogglans",
+          "Translation_NL": "vloer / hoogglans / wit",
+          "Translation_EN": "flooring / high gloss / white",
+          "Translation_DE": "Bodenbelag / Hochglanz / Weiß"
+        },
+        {
+          "name": "Verhoogde vloer 4cm",
+          "Translation_NL": "verhoogde vloer / 4 cm hoog",
+          "Translation_EN": "raised floor / 4 cm high",
+          "Translation_DE": "erhöhter Fußboden / 4 cm hoch"
+        }
+      ]
+    },
+    {
+      "Name": "Walls and Doors",
+      "Description": null,
+      "RowID": 22,
+      "MatchTerms": [
+        " Wände und Türe",
+        " walls and doors",
+        "wanden en deuren"
+      ],
+      "Elements": [
+        {
+          "name": "Wall / 250 cm high",
+          "Translation_NL": " wand / 250 cm hoog",
+          "Translation_EN": " wall / 250 cm high",
+          "Translation_DE": " Wand / 250 cm hoch"
+        },
+        {
+          "name": "Wall / 300 cm high",
+          "Translation_NL": " wand / 300 cm hoog",
+          "Translation_EN": " wall / 300 cm high",
+          "Translation_DE": " Wand / 300 cm hoch"
+        },
+        {
+          "name": "Wall / 350 cm high",
+          "Translation_NL": " wand / 350 cm hoog",
+          "Translation_EN": " wall / 350 cm high",
+          "Translation_DE": " Wand / 350 cm hoch"
+        },
+        {
+          "name": "Wall / 400 cm high",
+          "Translation_NL": " wand / 400 cm hoog",
+          "Translation_EN": " wall / 400 cm high",
+          "Translation_DE": " Wand / 400 cm hoch"
+        },
+        {
+          "name": "Wall / 450 cm high",
+          "Translation_NL": " wand / 450 cm hoog",
+          "Translation_EN": " wallb/ 450 cm high",
+          "Translation_DE": " Wand 450 cm hoch"
+        },
+        {
+          "name": "Wall / 500 cm high",
+          "Translation_NL": " wand / 500 cm hoog",
+          "Translation_EN": " wall / 500 cm high",
+          "Translation_DE": " Wand / 500 cm hoch"
+        },
+        {
+          "name": "Wall / 600 cm high",
+          "Translation_NL": " wand / 600 cm hoog",
+          "Translation_EN": " wall / 600 cm high",
+          "Translation_DE": " Wand / 600 cm hoch"
+        },
+        {
+          "name": "Wall element",
+          "Translation_NL": "wandelement",
+          "Translation_EN": " wall element",
+          "Translation_DE": " Wandelement"
+        },
+        {
+          "name": "Seamless wall",
+          "Translation_NL": " naadloze wand",
+          "Translation_EN": " seamless wall",
+          "Translation_DE": " Nathlose Wand"
+        },
+        {
+          "name": "Fitting wall",
+          "Translation_NL": "paswand",
+          "Translation_EN": " fitting wall",
+          "Translation_DE": " Füllwand"
+        },
+        {
+          "name": "Seperation wall",
+          "Translation_NL": "scheidingswand",
+          "Translation_EN": " seperation wall",
+          "Translation_DE": " Trennwand"
+        },
+        {
+          "name": "Folding wall",
+          "Translation_NL": "vouwwand",
+          "Translation_EN": " folding wall",
+          "Translation_DE": " Flügelwand"
+        },
+        {
+          "name": "Lockable door",
+          "Translation_NL": " afsluitbare deur",
+          "Translation_EN": " lockable door",
+          "Translation_DE": " abschließbare Tür"
+        },
+        {
+          "name": "Glass door",
+          "Translation_NL": "glasdeur",
+          "Translation_EN": " glass door ",
+          "Translation_DE": " Glastür"
+        },
+        {
+          "name": "Sliding door",
+          "Translation_NL": "schuifdeur",
+          "Translation_EN": " sliding door",
+          "Translation_DE": " Schiebetür"
+        },
+        {
+          "name": "Folding door",
+          "Translation_NL": "vouwdeur",
+          "Translation_EN": " folding door",
+          "Translation_DE": " Flügeltür"
+        },
+        {
+          "name": "Glass wall",
+          "Translation_NL": "glaswand",
+          "Translation_EN": " glass wall",
+          "Translation_DE": " Glaswand"
+        },
+        {
+          "name": "System wall / type 'Octanorm'",
+          "Translation_NL": " systeemwand / type 'Octanorm'",
+          "Translation_EN": " system wall / type 'Octanorm'",
+          "Translation_DE": " Systemwand / Type 'Octanorm'"
+        },
+        {
+          "name": "System door / type 'Octanorm'",
+          "Translation_NL": " systeemdeur / type 'Octanorm'",
+          "Translation_EN": " system door / type 'Octanorm'",
+          "Translation_DE": " Systemtür / Type 'Otanorm'"
+        },
+        {
+          "name": "Painting and finishing",
+          "Translation_NL": "schilderwerk",
+          "Translation_EN": " painting and finishing",
+          "Translation_DE": " Anstreichen und Endbearbeitung"
+        },
+        {
+          "name": "Aluvision system",
+          "Translation_NL": "Aluvision systeem",
+          "Translation_EN": " Aluvision system",
+          "Translation_DE": " Aluvision System"
+        },
+        {
+          "name": "Aluvistion wall panels",
+          "Translation_NL": "Aluvision Wandpanelen",
+          "Translation_EN": " Aluvistion wall panels",
+          "Translation_DE": " Aluvision Wandpaneele"
+        },
+        {
+          "name": "Aluvision door",
+          "Translation_NL": "Aluvision deur",
+          "Translation_EN": " Aluvision door",
+          "Translation_DE": " Aluvision Tür"
+        },
+        {
+          "name": "Volume wall",
+          "Translation_NL": " volume wand",
+          "Translation_EN": " volume wall",
+          "Translation_DE": " Volumenwand"
+        },
+        {
+          "name": "Back wall",
+          "Translation_NL": "achterwand",
+          "Translation_EN": " back wall",
+          "Translation_DE": " Rückwand"
+        },
+        {
+          "name": "Slatted wall",
+          "Translation_NL": "lattenwand",
+          "Translation_EN": " slatted wall",
+          "Translation_DE": " Lattenwand"
+        },
+        {
+          "name": "Storagewall",
+          "Translation_NL": "bergingwand",
+          "Translation_EN": " storagewall",
+          "Translation_DE": " Lagerwand"
+        },
+        {
+          "name": "Akoestische Panelen",
+          "Translation_NL": "akoestische panelen",
+          "Translation_EN": "acoustic panels",
+          "Translation_DE": "akustische Paneele"
+        },
+        {
+          "name": "zijwand",
+          "Translation_NL": "zijwand",
+          "Translation_EN": "side wall",
+          "Translation_DE": "Seitenwand"
+        }
+      ]
+    },
+    {
+      "Name": "Storey / Double deck",
+      "Description": null,
+      "RowID": 23,
+      "MatchTerms": [
+        " Etage/Doppeldeck",
+        " storey/double deck"
+      ],
+      "Elements": [
+        {
+          "name": "Steel construction",
+          "Translation_NL": "staalconstructie",
+          "Translation_EN": " steel construction",
+          "Translation_DE": " Stahlkonstruktion"
+        },
+        {
+          "name": "Banister",
+          "Translation_NL": "balustrade",
+          "Translation_EN": " banister",
+          "Translation_DE": " Balustrade"
+        },
+        {
+          "name": "Staircase",
+          "Translation_NL": "trap",
+          "Translation_EN": " staircase",
+          "Translation_DE": " Treppe"
+        },
+        {
+          "name": "Handrail",
+          "Translation_NL": "leuning",
+          "Translation_EN": " handrail",
+          "Translation_DE": " Handlauf"
+        },
+        {
+          "name": "Upholstered steps",
+          "Translation_NL": "gestoffeerde traptreden",
+          "Translation_EN": " upholstered steps",
+          "Translation_DE": " gepolsterte Stufen"
+        },
+        {
+          "name": "Steps with non-slipping strips",
+          "Translation_NL": " traptreden met anti-slip strips",
+          "Translation_EN": " steps with non-slipping strips",
+          "Translation_DE": " Stufen mit integrierter Rutschsigerung"
+        },
+        {
+          "name": "Steps",
+          "Translation_NL": "traptreden",
+          "Translation_EN": " steps",
+          "Translation_DE": " Stufen"
+        },
+        {
+          "name": "Banister with glass panels",
+          "Translation_NL": " balustrade voorzien van glaspanelen",
+          "Translation_EN": " banister with glass panels",
+          "Translation_DE": " Glasbrüstung"
+        },
+        {
+          "name": "Banister with steel cables",
+          "Translation_NL": " balustrade voorzien van staankabels",
+          "Translation_EN": " banister with steel cables",
+          "Translation_DE": " Balustrade mit Stahlkabel"
+        }
+      ]
+    },
+    {
+      "Name": "Ceiling",
+      "Description": null,
+      "RowID": 24,
+      "MatchTerms": [
+        " Decke",
+        " ceiling",
+        "plafond"
+      ],
+      "Elements": [
+        {
+          "name": "Cheesecloth",
+          "Translation_NL": "kaasdoek",
+          "Translation_EN": " cheesecloth",
+          "Translation_DE": " Käsetuch"
+        },
+        {
+          "name": "Sprinkler cloth",
+          "Translation_NL": " sprinklerdoek",
+          "Translation_EN": " sprinkler cloth",
+          "Translation_DE": " Sprinklertuch"
+        },
+        {
+          "name": "System ceiling",
+          "Translation_NL": "systeem plafond",
+          "Translation_EN": " system ceiling",
+          "Translation_DE": " Systemdecke"
+        },
+        {
+          "name": "Ceiling header",
+          "Translation_NL": "koof",
+          "Translation_EN": " ceiling header",
+          "Translation_DE": " Deckenelement"
+        },
+        {
+          "name": "Truss construction",
+          "Translation_NL": " truss constructie (excl. Afhangpunten en takels)",
+          "Translation_EN": " truss construction",
+          "Translation_DE": " Traversensystem"
+        },
+        {
+          "name": "Manual hoist",
+          "Translation_NL": "handtakel",
+          "Translation_EN": " manual hoist",
+          "Translation_DE": " Handkettenzug"
+        },
+        {
+          "name": "Hoist",
+          "Translation_NL": "motortakel",
+          "Translation_EN": " hoist",
+          "Translation_DE": " Motorkettenzug"
+        },
+        {
+          "name": "Rigging point",
+          "Translation_NL": "afhangpunt",
+          "Translation_EN": " rigging point",
+          "Translation_DE": " Abhängepunkt"
+        },
+        {
+          "name": "Ceiling construction",
+          "Translation_NL": "plafond constructie",
+          "Translation_EN": " ceiling construction",
+          "Translation_DE": " Deckenkonstruktion"
+        },
+        {
+          "name": "Static calculation",
+          "Translation_NL": "statische berekening",
+          "Translation_EN": " static calculation",
+          "Translation_DE": " Statische Berechnung"
+        },
+        {
+          "name": "koof met kopafmeting van 550x550mm",
+          "Translation_NL": "plafond constructie / 55x55 cm",
+          "Translation_EN": "ceiling construction / 55x55 cm",
+          "Translation_DE": "Decke Konstruktion  / 55x55 cm"
+        }
+      ]
+    },
+    {
+      "Name": "Kitchen / Storage",
+      "Description": "",
+      "RowID": 26,
+      "MatchTerms": [
+        " Küche/Lager",
+        " kitchen/storage",
+        "keuken/storage"
+      ],
+      "Elements": [
+        {
+          "name": "Kitchen unit with boiler and sink",
+          "Translation_NL": "keukenunit met spoelbak en boiler",
+          "Translation_EN": " kitchen unit with boiler and sink",
+          "Translation_DE": " Küchenblock mit Boiler und Spüle"
+        },
+        {
+          "name": "Waste bin",
+          "Translation_NL": "vuilnisbak",
+          "Translation_EN": " waste bin",
+          "Translation_DE": " Abfalleimer"
+        },
+        {
+          "name": "Mirror",
+          "Translation_NL": "spiegel",
+          "Translation_EN": " mirror",
+          "Translation_DE": " Spiegel"
+        },
+        {
+          "name": "Set of coat hooks",
+          "Translation_NL": "kledinghaken",
+          "Translation_EN": " set of coat hooks",
+          "Translation_DE": " Set Kleiderhaken"
+        },
+        {
+          "name": "Coat rack / type 'Ravenna'",
+          "Translation_NL": " kledingrek / type 'Ravenna'",
+          "Translation_EN": " coat rack / type 'Ravenna'",
+          "Translation_DE": " Garderobenschrank / Type 'Ravenna'"
+        },
+        {
+          "name": "Coat hangers / type 'Cona'",
+          "Translation_NL": " kledinghangers / type 'Cona'",
+          "Translation_EN": " coat hangers / type 'Cona'",
+          "Translation_DE": " Kleiderhänger / Type 'Cona'"
+        },
+        {
+          "name": "Locker",
+          "Translation_NL": "locker",
+          "Translation_EN": " locker",
+          "Translation_DE": " Locker"
+        },
+        {
+          "name": "Storage rack",
+          "Translation_NL": "bergrek",
+          "Translation_EN": " storage rack",
+          "Translation_DE": " Lagerschrank"
+        },
+        {
+          "name": "Worktop",
+          "Translation_NL": "werkblad",
+          "Translation_EN": " worktop",
+          "Translation_DE": " Arbeitsblatt"
+        },
+        {
+          "name": "Set of shelves",
+          "Translation_NL": "schappenset",
+          "Translation_EN": " set of shelves",
+          "Translation_DE": " Set Lagerregalen"
+        },
+        {
+          "name": "Fire extinguisher",
+          "Translation_NL": "brandblusser",
+          "Translation_EN": " fire extinguisher",
+          "Translation_DE": " Feuerlöscher"
+        },
+        {
+          "name": "Cleaning set",
+          "Translation_NL": "schoonmaakset",
+          "Translation_EN": " cleaning set",
+          "Translation_DE": " Reinigungsset"
+        },
+        {
+          "name": "Refrigerator / small",
+          "Translation_NL": " koelkast / klein",
+          "Translation_EN": " refrigerator / small",
+          "Translation_DE": " Kühlschrank / klein"
+        },
+        {
+          "name": "Refrigerator / large",
+          "Translation_NL": " koelkast / groot",
+          "Translation_EN": " refrigerator / large",
+          "Translation_DE": " Kühlschrank / groß"
+        },
+        {
+          "name": "Coffee machine",
+          "Translation_NL": "koffiezetapparaat",
+          "Translation_EN": " coffee machine",
+          "Translation_DE": " Kaffeemaschine"
+        },
+        {
+          "name": "Nespresso machine",
+          "Translation_NL": "Nespresso apparaat",
+          "Translation_EN": " Nespresso machine",
+          "Translation_DE": " Nespresso Gerät"
+        },
+        {
+          "name": "Water cooker",
+          "Translation_NL": "waterkoker",
+          "Translation_EN": " water cooker",
+          "Translation_DE": " Wasserkocher"
+        },
+        {
+          "name": "Water cooler",
+          "Translation_NL": "watercooler",
+          "Translation_EN": " water cooler",
+          "Translation_DE": " Wasserkühler"
+        },
+        {
+          "name": "Dishwasher",
+          "Translation_NL": "vaatwasser",
+          "Translation_EN": " dishwasher",
+          "Translation_DE": " Geschirrspülmaschine"
+        },
+        {
+          "name": "Vacuum cleaner",
+          "Translation_NL": "stofzuiger",
+          "Translation_EN": " vacuum cleaner",
+          "Translation_DE": " Staubsauger"
+        },
+        {
+          "name": "Tap installation",
+          "Translation_NL": "tapinstallatie",
+          "Translation_EN": " tap installation",
+          "Translation_DE": " Zapfinstallation"
+        },
+        {
+          "name": "Sink",
+          "Translation_NL": "spoelbak",
+          "Translation_EN": " sink",
+          "Translation_DE": " Spülbecken"
+        },
+        {
+          "name": "Oven",
+          "Translation_NL": "oven",
+          "Translation_EN": " oven",
+          "Translation_DE": " Ofen"
+        },
+        {
+          "name": "Frying pan",
+          "Translation_NL": "friteuze",
+          "Translation_EN": " frying pan",
+          "Translation_DE": " Fritürpfanne"
+        },
+        {
+          "name": "Cooker hood",
+          "Translation_NL": "afzuigkap",
+          "Translation_EN": " cooker hood",
+          "Translation_DE": " Haube"
+        },
+        {
+          "name": "Freezer",
+          "Translation_NL": "vriezer",
+          "Translation_EN": " freezer",
+          "Translation_DE": " Gefriertruhe"
+        },
+        {
+          "name": "Microwave",
+          "Translation_NL": "magnetron",
+          "Translation_EN": " microwace",
+          "Translation_DE": " Mirkowelle"
+        },
+        {
+          "name": "Set of tableware",
+          "Translation_NL": "servies",
+          "Translation_EN": " set of tableware",
+          "Translation_DE": " Tafelgeschirr"
+        },
+        {
+          "name": "Kitchen / storage",
+          "Translation_NL": "keuken/storage",
+          "Translation_EN": " kitchen/storage",
+          "Translation_DE": " Küche/Lager"
+        },
+        {
+          "name": "Kledinghanger CORDOBA",
+          "Translation_NL": "Kledinghanger CORDOBA",
+          "Translation_EN": "Clothes hanger CORDOBA",
+          "Translation_DE": "21 Kleiderbügel CORDOBA"
+        },
+        {
+          "name": "Garderoberek VICKA 162 cm breed koppelbaar",
+          "Translation_NL": "Garderoberek VICKA 162 cm breed koppelbaar",
+          "Translation_EN": "Garderoberek VICKA 162 cm Attachable",
+          "Translation_DE": "Kleiderständer VICKA, 162 cm breit, verbindbar"
+        },
+        {
+          "name": "Prullenbak CORDOBA zwart geperforeerd",
+          "Translation_NL": "Prullenbak CORDOBA zwart geperforeerd",
+          "Translation_EN": "CORDOBA black perforated waste bin",
+          "Translation_DE": "CORDOBA schwarzer perforierter Abfalleimer"
+        },
+        {
+          "name": "Waterkoeler CALAIS metaal geintegreerde bekerhouder",
+          "Translation_NL": "Waterkoeler CALAIS metaal geintegreerde bekerhouder",
+          "Translation_EN": "Calais metal water cooler with integrated cup holder",
+          "Translation_DE": "Calais Metall-Wasserspender mit integriertem Becherhalter"
+        },
+        {
+          "name": "Pushboy afvalbak zwart H74. rond 35 cm. + 3 zakken",
+          "Translation_NL": "Pushboy afvalbak zwart H74. rond 35 cm. + 3 zakken",
+          "Translation_EN": "Pushboy waste bin black H74. Round 35 cm. + 3 bags.",
+          "Translation_DE": "Pushboy Abfalleimer schwarz H74. Rund 35 cm. + 3 Müllbeutel."
+        },
+        {
+          "name": "Kapstok POLLY zwart",
+          "Translation_NL": "Kapstok POLLY zwart",
+          "Translation_EN": "Coat rack POLLY black",
+          "Translation_DE": "Garderobenständer POLLY schwarz"
+        },
+        {
+          "name": "Watercan CALAIS 18,9 liter + set van 100 kartonnen bekers",
+          "Translation_NL": "Watercan CALAIS 18,9 liter + set van 100 kartonnen bekers",
+          "Translation_EN": "Calais 18.9 litre water can + set of 100 cardboard cups",
+          "Translation_DE": "Calais 18,9-Liter-Wasserkanister + Set mit 100 Pappbechern"
+        },
+        {
+          "name": "Schappenrek",
+          "Translation_NL": "schappenrek",
+          "Translation_EN": "storage rack",
+          "Translation_DE": "Lagerregale"
+        },
+        {
+          "name": "Afvalbak",
+          "Translation_NL": "prullenbak",
+          "Translation_EN": "waste bin",
+          "Translation_DE": "Abfallbehälter"
+        },
+        {
+          "name": "Kapstok",
+          "Translation_NL": "kapstok",
+          "Translation_EN": "coat rack",
+          "Translation_DE": "Garderobenständer"
+        },
+        {
+          "name": "Koelkast",
+          "Translation_NL": "koelkast",
+          "Translation_EN": "refrigerator",
+          "Translation_DE": "Kühlschrank"
+        }
+      ]
+    },
+    {
+      "Name": "Interior",
+      "Description": null,
+      "RowID": 27,
+      "MatchTerms": [
+        " Einrichtung",
+        " Interior",
+        "Interieur"
+      ],
+      "Elements": [
+        {
+          "name": "Eye catcher",
+          "Translation_NL": " blikvanger",
+          "Translation_EN": " eye catcher",
+          "Translation_DE": " Eyecatcher"
+        },
+        {
+          "name": "Info desk",
+          "Translation_NL": " informatiebalie",
+          "Translation_EN": " info desk",
+          "Translation_DE": " Infotheke"
+        },
+        {
+          "name": "Bar",
+          "Translation_NL": "bar",
+          "Translation_EN": " bar",
+          "Translation_DE": " Bar"
+        },
+        {
+          "name": "Display unit",
+          "Translation_NL": "display unit",
+          "Translation_EN": " display unit",
+          "Translation_DE": " Display Unit"
+        },
+        {
+          "name": "Display",
+          "Translation_NL": " display unit",
+          "Translation_EN": " display",
+          "Translation_DE": " Display"
+        },
+        {
+          "name": "Showcase",
+          "Translation_NL": " vitrinekast",
+          "Translation_EN": " showcase",
+          "Translation_DE": " Vitrine"
+        },
+        {
+          "name": "Bag holder",
+          "Translation_NL": "tassendrager",
+          "Translation_EN": " bag holder",
+          "Translation_DE": " Taschenhalter"
+        },
+        {
+          "name": "Platform",
+          "Translation_NL": "podest",
+          "Translation_EN": " platform",
+          "Translation_DE": " Podest"
+        },
+        {
+          "name": "Custom made item",
+          "Translation_NL": "custom made item",
+          "Translation_EN": " custom made item",
+          "Translation_DE": " custom made item"
+        },
+        {
+          "name": "Plexiglas holder",
+          "Translation_NL": "plexiglas houder",
+          "Translation_EN": " Plexiglas holder",
+          "Translation_DE": " Plexiglas Stütze"
+        },
+        {
+          "name": "Desk",
+          "Translation_NL": "theke",
+          "Translation_EN": " desk",
+          "Translation_DE": " Theke"
+        },
+        {
+          "name": "Product presentation",
+          "Translation_NL": "product presentatie",
+          "Translation_EN": " product presentation",
+          "Translation_DE": " Produktpräsentation"
+        },
+        {
+          "name": "Acoustic slats",
+          "Translation_NL": "akoestische latjes",
+          "Translation_EN": " acoustic slats",
+          "Translation_DE": " Akustik Lamellen"
+        },
+        {
+          "name": "Buffetkast ca. 2000x500x3250mm",
+          "Translation_NL": "buffetkast / 200x50x325 cm",
+          "Translation_EN": "showcase cabinet / 200x50x325 cm",
+          "Translation_DE": "Buffetschrank / 200x50x325 cm"
+        },
+        {
+          "name": "Overige meubelen",
+          "Translation_NL": "Overige meubelen",
+          "Translation_EN": "Various types of furniture",
+          "Translation_DE": "Diverse Möbelarten"
+        },
+        {
+          "name": "schappen voor kunstplanten",
+          "Translation_NL": "schappen voor kunstplanten",
+          "Translation_EN": "shelfs for artificial plants",
+          "Translation_DE": "Regale für Kunstpflanzen"
+        },
+        {
+          "name": "zwarte frame constructie",
+          "Translation_NL": "frame constructie / zwart",
+          "Translation_EN": "frame construction / black",
+          "Translation_DE": "Rahmen Konstruktion / Schwarz"
+        }
+      ]
+    },
+    {
+      "Name": "Graphics",
+      "Description": null,
+      "RowID": 28,
+      "MatchTerms": [
+        " Grafiken",
+        " Graphics",
+        "grafisch"
+      ],
+      "Elements": [
+        {
+          "name": "Full colour banner",
+          "Translation_NL": "full colour banner",
+          "Translation_EN": " full colour banner",
+          "Translation_DE": " Full colour Banner"
+        },
+        {
+          "name": "Full colour panel / out of forex",
+          "Translation_NL": " full colour paneel / forex",
+          "Translation_EN": " full colour panel / out of forex",
+          "Translation_DE": " Full colour Paneel / aus Forex"
+        },
+        {
+          "name": "Logo / out of self-adhesive foil",
+          "Translation_NL": " logo / uit snijfolie",
+          "Translation_EN": " logo / out of self-adhesive foil",
+          "Translation_DE": " Logo / aus Klebefolie"
+        },
+        {
+          "name": "Text / out of self-adhesive foil",
+          "Translation_NL": " tekst / uit snijfolie",
+          "Translation_EN": " text / out of self-adhesive foil",
+          "Translation_DE": " Tekst / aus Klebefolie"
+        },
+        {
+          "name": "Logo / out of vinyl",
+          "Translation_NL": " logo / uit vinyl",
+          "Translation_EN": " logo / out of vinyl",
+          "Translation_DE": " Logo / aus Vinyl"
+        },
+        {
+          "name": "Text / out of vinyl",
+          "Translation_NL": " tekst / uit vinyl",
+          "Translation_EN": " text / out of vinyl",
+          "Translation_DE": " Tekst / aus Vinyl"
+        },
+        {
+          "name": "3D logo",
+          "Translation_NL": "3D logo",
+          "Translation_EN": " 3D logo",
+          "Translation_DE": " 3D Logo"
+        },
+        {
+          "name": "Full colour print / on floor",
+          "Translation_NL": " full colour print / op vloer",
+          "Translation_EN": " full colour print / on floor",
+          "Translation_DE": " Full colour Abdruck / Boden"
+        },
+        {
+          "name": "Poster",
+          "Translation_NL": "poster",
+          "Translation_EN": " poster",
+          "Translation_DE": " Poster"
+        },
+        {
+          "name": "Light box",
+          "Translation_NL": "lichtbak",
+          "Translation_EN": " light box",
+          "Translation_DE": " Leuchtbox"
+        },
+        {
+          "name": "Reader board",
+          "Translation_NL": "informatiebord",
+          "Translation_EN": " reader board",
+          "Translation_DE": " Informationsschild"
+        },
+        {
+          "name": "Panel",
+          "Translation_NL": " paneel",
+          "Translation_EN": " panel",
+          "Translation_DE": " Paneel"
+        },
+        {
+          "name": "Blockout",
+          "Translation_NL": "blockout",
+          "Translation_EN": " blockout",
+          "Translation_DE": " blockout"
+        },
+        {
+          "name": "Blackback",
+          "Translation_NL": "blackback",
+          "Translation_EN": " blackback",
+          "Translation_DE": " blackback"
+        },
+        {
+          "name": "GRAFISCH",
+          "Translation_NL": "Full colour graphic",
+          "Translation_EN": "Full colour graphic",
+          "Translation_DE": "Full Colour grafik"
+        },
+        {
+          "name": "montage logo",
+          "Translation_NL": "montage logo",
+          "Translation_EN": "assembly logo",
+          "Translation_DE": "Logo-Montage"
+        },
+        {
+          "name": "Graphic Banner Blockout Blackback",
+          "Translation_NL": "Grafische Banner Blockout Blackback",
+          "Translation_EN": "Graphic Banner Blockout Blackback",
+          "Translation_DE": "Grafischer Banner Blockout Blackback"
+        }
+      ]
+    },
+    {
+      "Name": "Decoration",
+      "Description": null,
+      "RowID": 29,
+      "MatchTerms": [
+        " Dekoration",
+        " decoration",
+        "decoratie"
+      ],
+      "Elements": [
+        {
+          "name": "Plant decoration",
+          "Translation_NL": " plantdecoratie",
+          "Translation_EN": " plant decoration",
+          "Translation_DE": " Pflanzendekoration"
+        },
+        {
+          "name": "Thread curtain",
+          "Translation_NL": "draadgordijn",
+          "Translation_EN": " thread curtain",
+          "Translation_DE": " Fadengardine"
+        },
+        {
+          "name": "Flowers",
+          "Translation_NL": "bloemen",
+          "Translation_EN": " flowers",
+          "Translation_DE": " Blumendekoration"
+        },
+        {
+          "name": "Vase",
+          "Translation_NL": "vaas",
+          "Translation_EN": " vase",
+          "Translation_DE": " Vase"
+        },
+        {
+          "name": "Artificial plant",
+          "Translation_NL": "kunstplant",
+          "Translation_EN": " artificial plant",
+          "Translation_DE": " Kunstpflanze"
+        },
+        {
+          "name": "Banner frame enkelzijdige banners bestaand",
+          "Translation_NL": "Banner frame enkelzijdige banners / bestaand",
+          "Translation_EN": "Banner frame single sided banner / extisting",
+          "Translation_DE": "Banner Rahmen einseitiger Banner / bestehend"
+        },
+        {
+          "name": "zwarte kaders",
+          "Translation_NL": "zwarte kaders",
+          "Translation_EN": "black frames",
+          "Translation_DE": "schwarze Rahmen"
+        }
+      ]
+    },
+    {
+      "Name": "General",
+      "Description": null,
+      "RowID": 30,
+      "MatchTerms": [
+        " Allgemein",
+        " general",
+        "algemeen"
+      ],
+      "Elements": [
+        {
+          "name": "Packaging crate",
+          "Translation_NL": "transportkist",
+          "Translation_EN": " packaging crate",
+          "Translation_DE": " Transportkiste"
+        },
+        {
+          "name": "Build-up",
+          "Translation_NL": "opbouw",
+          "Translation_EN": " build-up",
+          "Translation_DE": " Aufbau"
+        },
+        {
+          "name": "Dismantling",
+          "Translation_NL": "demontage",
+          "Translation_EN": " dismantling",
+          "Translation_DE": " Demontage"
+        },
+        {
+          "name": "General costs",
+          "Translation_NL": "algemene kosten",
+          "Translation_EN": " general costs",
+          "Translation_DE": " Allgemeine Kosten"
+        },
+        {
+          "name": "Travel costs",
+          "Translation_NL": "reiskosten",
+          "Translation_EN": " travel costs",
+          "Translation_DE": " Reisekosten"
+        },
+        {
+          "name": "Hotel costs",
+          "Translation_NL": "hotel",
+          "Translation_EN": " hotel costs",
+          "Translation_DE": " Hotelkosten"
+        },
+        {
+          "name": "Storage costs",
+          "Translation_NL": "storage kosten",
+          "Translation_EN": " storage costs",
+          "Translation_DE": " Lagerkosten"
+        },
+        {
+          "name": "Margin",
+          "Translation_NL": "marge",
+          "Translation_EN": " margin",
+          "Translation_DE": " Marge"
+        },
+        {
+          "name": "Fee",
+          "Translation_NL": "fee",
+          "Translation_EN": " fee",
+          "Translation_DE": " Fee"
+        },
+        {
+          "name": "Living costs",
+          "Translation_NL": "verteer",
+          "Translation_EN": " living costs",
+          "Translation_DE": " Aufenthaltskosten"
+        },
+        {
+          "name": "Transport",
+          "Translation_NL": "transport",
+          "Translation_EN": " transport",
+          "Translation_DE": " Transport"
+        },
+        {
+          "name": "Discount",
+          "Translation_NL": "korting",
+          "Translation_EN": " discount",
+          "Translation_DE": " Preisnachlass"
+        },
+        {
+          "name": "Design",
+          "Translation_NL": "ontwerp",
+          "Translation_EN": " design",
+          "Translation_DE": " Entwurf"
+        },
+        {
+          "name": "Project Management",
+          "Translation_NL": " Hoynck bv Project Management",
+          "Translation_EN": " Hoynck bv Project Management",
+          "Translation_DE": " Hoynck bv Projekt Management"
+        },
+        {
+          "name": "Environmental costs",
+          "Translation_NL": "Milieukosten",
+          "Translation_EN": " environmental costs",
+          "Translation_DE": " Umweltkosten"
+        },
+        {
+          "name": "Milting",
+          "Translation_NL": "uitzagen",
+          "Translation_EN": " freezen",
+          "Translation_DE": " Fräsen"
+        },
+        {
+          "name": "MAGAZIJN",
+          "Translation_NL": "magazijn",
+          "Translation_EN": "warehouse",
+          "Translation_DE": "Lager"
+        }
+      ]
+    },
+    {
+      "Name": "Audiovisual Equipment",
+      "Description": "",
+      "RowID": 31,
+      "MatchTerms": [
+        " Audiovisuelle Ausstattung",
+        " Audiovisual Equipment",
+        "Audiovisueel"
+      ],
+      "Elements": [
+        {
+          "name": "Laptop",
+          "Translation_NL": "laptop",
+          "Translation_EN": " laptop",
+          "Translation_DE": " Laptop"
+        },
+        {
+          "name": "Desk top",
+          "Translation_NL": "desk top",
+          "Translation_EN": " desk top",
+          "Translation_DE": " Computer"
+        },
+        {
+          "name": "LED screen",
+          "Translation_NL": "LED scherm",
+          "Translation_EN": " LED screen",
+          "Translation_DE": " LED Schirm"
+        },
+        {
+          "name": "Plasma screen",
+          "Translation_NL": "plasma scherm",
+          "Translation_EN": " plasma screen",
+          "Translation_DE": " Plasmaschirm"
+        },
+        {
+          "name": "TV screen",
+          "Translation_NL": "tv scherm",
+          "Translation_EN": " tv screen",
+          "Translation_DE": " Bildschirm"
+        },
+        {
+          "name": "Sound installation",
+          "Translation_NL": "geluidsinstallatie",
+          "Translation_EN": " sound installation",
+          "Translation_DE": " Sound System"
+        },
+        {
+          "name": "Cabling set",
+          "Translation_NL": "kabels",
+          "Translation_EN": " cabling set",
+          "Translation_DE": " Verkabelung"
+        },
+        {
+          "name": "Microphone",
+          "Translation_NL": "microfoon",
+          "Translation_EN": " microphone",
+          "Translation_DE": " Mikrofon"
+        },
+        {
+          "name": "Printer",
+          "Translation_NL": "printer",
+          "Translation_EN": " printer",
+          "Translation_DE": " Drucker"
+        },
+        {
+          "name": "Speaker",
+          "Translation_NL": "speaker",
+          "Translation_EN": " speaker",
+          "Translation_DE": " Lautsprecher"
+        },
+        {
+          "name": "LED line",
+          "Translation_NL": "LED lijn",
+          "Translation_EN": " LED line",
+          "Translation_DE": " LED Linie"
+        },
+        {
+          "name": "LED wall",
+          "Translation_NL": "LED wand",
+          "Translation_EN": " LED wall",
+          "Translation_DE": " LED Wand"
+        },
+        {
+          "name": "55\" touchscreen",
+          "Translation_NL": "55\" touchscreen",
+          "Translation_EN": "55\" touchscreen",
+          "Translation_DE": "55\" touchscreen"
+        },
+        {
+          "name": "65 Inch TV",
+          "Translation_NL": "65\" TV",
+          "Translation_EN": "65\" TV",
+          "Translation_DE": "65\" Bildschirm"
+        }
+      ]
+    },
+    {
+      "Name": "Electricity",
+      "Description": null,
+      "RowID": 32,
+      "MatchTerms": [
+        " Elektrizität",
+        " electricity",
+        " elektriciteit",
+        "electriciteit "
+      ],
+      "Elements": [
+        {
+          "name": "Spot",
+          "Translation_NL": " spot",
+          "Translation_EN": " spot",
+          "Translation_DE": " Spot"
+        },
+        {
+          "name": "Socket",
+          "Translation_NL": "wandcontactdoos",
+          "Translation_EN": " socket",
+          "Translation_DE": " Steckdose"
+        },
+        {
+          "name": "Switchboard",
+          "Translation_NL": "verdeelkast",
+          "Translation_EN": " switchboard",
+          "Translation_DE": " Schaltschrank"
+        },
+        {
+          "name": "Tube-light",
+          "Translation_NL": "TL verlichting",
+          "Translation_EN": " tube-light",
+          "Translation_DE": " Leuchtstofflampe"
+        },
+        {
+          "name": "Air-conditioning unit",
+          "Translation_NL": "airco",
+          "Translation_EN": " air-conditioning unit",
+          "Translation_DE": " Klimaanlage"
+        },
+        {
+          "name": "Cabling set",
+          "Translation_NL": "bekabeling",
+          "Translation_EN": " cabling set",
+          "Translation_DE": " Verkabelung"
+        },
+        {
+          "name": "Spot on distance holder",
+          "Translation_NL": "pendelspot",
+          "Translation_EN": " spot on distance holder",
+          "Translation_DE": " Armspot"
+        },
+        {
+          "name": "Floor lamp",
+          "Translation_NL": "stalamp",
+          "Translation_EN": " floor lamp",
+          "Translation_DE": " Stehlampe"
+        },
+        {
+          "name": "Wall lamp",
+          "Translation_NL": "wandlamp",
+          "Translation_EN": " wall lamp",
+          "Translation_DE": " Wandlampe"
+        },
+        {
+          "name": "Hanging lamp",
+          "Translation_NL": "hanglamp",
+          "Translation_EN": " hanging lamp",
+          "Translation_DE": " Hanglampe"
+        },
+        {
+          "name": "Installation",
+          "Translation_NL": "installatie",
+          "Translation_EN": " installation",
+          "Translation_DE": " Installation"
+        },
+        {
+          "name": "Illuminated",
+          "Translation_NL": "verlicht",
+          "Translation_EN": " illuminated",
+          "Translation_DE": " beleuchtet"
+        },
+        {
+          "name": "Inbouwspots ø150",
+          "Translation_NL": "Inbouwspots / ø150 cm",
+          "Translation_EN": "build in spot / ø150 cm",
+          "Translation_DE": "Einbaustrahler / ø150 cm"
+        },
+        {
+          "name": "logo led aansluiten",
+          "Translation_NL": "logo led aansluiten",
+          "Translation_EN": "assembly LED logo",
+          "Translation_DE": "Montage LED-Logo"
+        },
+        {
+          "name": "Railspots zwart",
+          "Translation_NL": "Railspots / zwart",
+          "Translation_EN": "railspots / black",
+          "Translation_DE": "Railspots / Schwarz"
+        },
+        {
+          "name": "Floodlight 150W.",
+          "Translation_NL": "Schijnwerper 150W",
+          "Translation_EN": "floodlight 150W",
+          "Translation_DE": "Strahler 150W"
+        },
+        {
+          "name": "Pendel displayspot",
+          "Translation_NL": "Pendel displayspot",
+          "Translation_EN": "Spot on Distanceholder",
+          "Translation_DE": "Spot auf Abstandshalter"
+        }
+      ]
+    },
+    {
+      "Name": "OSS",
+      "Description": null,
+      "RowID": 33,
+      "MatchTerms": [
+        " Servicekosten vor Ort",
+        " on site costs",
+        " kosten on site",
+        "OSS"
+      ],
+      "Elements": [
+        {
+          "name": "Stand cleaning",
+          "Translation_NL": "schoonmaak",
+          "Translation_EN": " stand cleaning",
+          "Translation_DE": " Standreinigung"
+        },
+        {
+          "name": "Catering",
+          "Translation_NL": "catering",
+          "Translation_EN": " catering",
+          "Translation_DE": " Catering"
+        },
+        {
+          "name": "Hostesses",
+          "Translation_NL": "hostessen",
+          "Translation_EN": " hostesses",
+          "Translation_DE": " Hostessen"
+        },
+        {
+          "name": "Stand security",
+          "Translation_NL": " standbeveiliging",
+          "Translation_EN": " stand security",
+          "Translation_DE": " Standbewachung"
+        },
+        {
+          "name": "Electricity",
+          "Translation_NL": "electriciteit",
+          "Translation_EN": " electricity",
+          "Translation_DE": " Elektroanschluss"
+        },
+        {
+          "name": "Suspension points",
+          "Translation_NL": "ophangpunten",
+          "Translation_EN": " suspension points",
+          "Translation_DE": " Abhängepunkten"
+        },
+        {
+          "name": "Sprinkler system",
+          "Translation_NL": " sprinkler installatie",
+          "Translation_EN": " sprinkler system",
+          "Translation_DE": " Sprinkleranlage"
+        },
+        {
+          "name": "Internet",
+          "Translation_NL": "Internet",
+          "Translation_EN": " internet",
+          "Translation_DE": " Internet"
+        },
+        {
+          "name": "Telephone",
+          "Translation_NL": "telefoon",
+          "Translation_EN": " telephone",
+          "Translation_DE": " Telefon"
+        },
+        {
+          "name": "Water",
+          "Translation_NL": "water",
+          "Translation_EN": " water",
+          "Translation_DE": " Wasser"
+        },
+        {
+          "name": "Alarm",
+          "Translation_NL": " alarm",
+          "Translation_EN": " alarm",
+          "Translation_DE": " Alarm"
+        },
+        {
+          "name": "Photos",
+          "Translation_NL": "foto's",
+          "Translation_EN": " photos",
+          "Translation_DE": " Fotos"
+        },
+        {
+          "name": "Rigging",
+          "Translation_NL": "rigging",
+          "Translation_EN": " rigging",
+          "Translation_DE": " Rigging"
+        }
+      ]
+    },
+    {
+      "Name": "Various",
+      "Description": null,
+      "RowID": 34,
+      "MatchTerms": [
+        " Diverse",
+        " various",
+        " diverse",
+        "Diverse"
+      ],
+      "Elements": [
+        {
+          "name": "Rental elements",
+          "Translation_NL": "huurelementen",
+          "Translation_EN": " rental elements",
+          "Translation_DE": " Mietelemente"
+        },
+        {
+          "name": "Purchase elements",
+          "Translation_NL": "koopelementen",
+          "Translation_EN": " purchase elements",
+          "Translation_DE": " Kaufelemente"
+        },
+        {
+          "name": "Storage elements",
+          "Translation_NL": "opslagelementen",
+          "Translation_EN": " storage elements",
+          "Translation_DE": " Lagerelemente"
+        },
+        {
+          "name": "Lowered",
+          "Translation_NL": "verlaagd",
+          "Translation_EN": " lowered",
+          "Translation_DE": " abgesenkt"
+        },
+        {
+          "name": "Raised",
+          "Translation_NL": "verhoogd",
+          "Translation_EN": " raised",
+          "Translation_DE": " erhöht"
+        },
+        {
+          "name": "Illuminated",
+          "Translation_NL": "verlicht",
+          "Translation_EN": " illuminated",
+          "Translation_DE": " beleuchtet"
+        },
+        {
+          "name": "Provision for",
+          "Translation_NL": "stelpost",
+          "Translation_EN": " provision for",
+          "Translation_DE": " Kostenvoranschlag"
+        },
+        {
+          "name": "Preparation",
+          "Translation_NL": "voormontage",
+          "Translation_EN": " preparation",
+          "Translation_DE": " Vorbereitung Montage"
+        },
+        {
+          "name": "Preparation and packing costs",
+          "Translation_NL": "montage en verpakkingsmaterialen",
+          "Translation_EN": " preparation and packing costs",
+          "Translation_DE": " Vorbereitungs und Verpackungskosten"
+        },
+        {
+          "name": "Latex and painting supplies",
+          "Translation_NL": " plamuur en schilderbenodigheden",
+          "Translation_EN": " latex and painting supplies",
+          "Translation_DE": " Farbe und Farbutensilien"
+        },
+        {
+          "name": "Additional costs",
+          "Translation_NL": "meerprijs",
+          "Translation_EN": " additional costs",
+          "Translation_DE": " Zusätzliche Kosten"
+        },
+        {
+          "name": "Built-in",
+          "Translation_NL": "ingebouwd",
+          "Translation_EN": " built-in",
+          "Translation_DE": " Eingebaut"
+        },
+        {
+          "name": "Hospitality",
+          "Translation_NL": "hospitality",
+          "Translation_EN": " Hospitality",
+          "Translation_DE": " Hospitality"
+        },
+        {
+          "name": "Waste bin",
+          "Translation_NL": " afvalbak",
+          "Translation_EN": " waste bin",
+          "Translation_DE": " Abfalleimer"
+        },
+        {
+          "name": "Upholstered",
+          "Translation_NL": "gestoffeerd",
+          "Translation_EN": " upholstered",
+          "Translation_DE": " stoffiert"
+        },
+        {
+          "name": "Re-use",
+          "Translation_NL": "hergebruik",
+          "Translation_EN": " re-use",
+          "Translation_DE": " Wiederverwendung"
+        },
+        {
+          "name": "Furnished",
+          "Translation_NL": "ingericht",
+          "Translation_EN": " furnished",
+          "Translation_DE": " eingerichtet"
+        },
+        {
+          "name": "Height",
+          "Translation_NL": "hoogte",
+          "Translation_EN": " height",
+          "Translation_DE": " Höhe"
+        },
+        {
+          "name": "Powder coated",
+          "Translation_NL": "gepoedercoat",
+          "Translation_EN": " powder coated",
+          "Translation_DE": " Pulverbeschichtet"
+        },
+        {
+          "name": "Frame",
+          "Translation_NL": "frame",
+          "Translation_EN": " frame",
+          "Translation_DE": " Rahmen"
+        },
+        {
+          "name": "Custom build",
+          "Translation_NL": "op maat gemaakt",
+          "Translation_EN": " custom build",
+          "Translation_DE": " Sonderanfertigung"
+        },
+        {
+          "name": "Assembly",
+          "Translation_NL": "opbouw",
+          "Translation_EN": " assembly",
+          "Translation_DE": " Aufbau"
+        }
+      ]
+    },
+    {
+      "Name": "Display's & Cabinets",
+      "Description": "Not in synonym list",
+      "RowID": 39,
+      "MatchTerms": [
+        "Display's & Cabinets"
+      ],
+      "Elements": []
+    },
+    {
+      "Name": "Furniture",
+      "Description": "",
+      "RowID": 44,
+      "MatchTerms": [
+        " Möbel",
+        " Furniture",
+        "Meubilair"
+      ],
+      "Elements": [
+        {
+          "name": "Coffee table",
+          "Translation_NL": "salontafel",
+          "Translation_EN": " coffee table",
+          "Translation_DE": " Kaffeetisch"
+        },
+        {
+          "name": "Coffee table / type 'Venezia'",
+          "Translation_NL": " salontafel / type 'Venzia'",
+          "Translation_EN": " coffee table / type 'Venezia'",
+          "Translation_DE": " Kaffeetisch / Type 'Venezia'"
+        },
+        {
+          "name": "Table",
+          "Translation_NL": "tafel",
+          "Translation_EN": " table",
+          "Translation_DE": " Tisch"
+        },
+        {
+          "name": "Table / type 'Albaredo'",
+          "Translation_NL": " tafel / type 'Albaredo'",
+          "Translation_EN": " table / type 'Albaredo'",
+          "Translation_DE": " Tisch / Type 'Albaredo'"
+        },
+        {
+          "name": "Table / type 'Medola'",
+          "Translation_NL": " tafel / type 'Medola'",
+          "Translation_EN": " table / type 'Medola'",
+          "Translation_DE": " Tisch / Type 'Medola'"
+        },
+        {
+          "name": "Table / type 'Mestre'",
+          "Translation_NL": " tafel / type 'Mestre'",
+          "Translation_EN": " table / type 'Mestre'",
+          "Translation_DE": " Tisch / Type 'Mestre'"
+        },
+        {
+          "name": "Table / type 'Meta'",
+          "Translation_NL": " tafel / type 'Meta'",
+          "Translation_EN": " table / type 'Meta'",
+          "Translation_DE": " Tisch / Type 'Meta'"
+        },
+        {
+          "name": "Table / type 'Venezia'",
+          "Translation_NL": " tafel / type 'Venezia'",
+          "Translation_EN": " table / type 'Venezia'",
+          "Translation_DE": " Tisch / Type 'Venezia'"
+        },
+        {
+          "name": "Table / type 'Visone'",
+          "Translation_NL": " tafel / type 'Visone'",
+          "Translation_EN": " table / type 'Visone'",
+          "Translation_DE": " Tisch / Type 'Visone'"
+        },
+        {
+          "name": "Chair",
+          "Translation_NL": "stoel",
+          "Translation_EN": " chair",
+          "Translation_DE": " Stuhl"
+        },
+        {
+          "name": "Chair / type 'Bisou'",
+          "Translation_NL": " stoel / type 'Bisou'",
+          "Translation_EN": " chair / type 'Bisou'",
+          "Translation_DE": " Stuhl / Type 'Bisou'"
+        },
+        {
+          "name": "Chair / type 'Latina'",
+          "Translation_NL": " stoel / type 'Latina'",
+          "Translation_EN": " chair / type 'Latina'",
+          "Translation_DE": " Stuhl / Type 'Latina'"
+        },
+        {
+          "name": "Chair / type 'Lauria'",
+          "Translation_NL": " stoel / type 'Lauria'",
+          "Translation_EN": " chair / type 'Lauria'",
+          "Translation_DE": " Stuhl / Type 'Lauria'"
+        },
+        {
+          "name": "Chair / type 'Lorenzo'",
+          "Translation_NL": " stoel / type 'Lorenzo'",
+          "Translation_EN": " chair / type 'Lorenzo'",
+          "Translation_DE": " Stuhl / Type 'Lorenzo'"
+        },
+        {
+          "name": "Chair / type 'Maui'",
+          "Translation_NL": " stoel / type 'Maui'",
+          "Translation_EN": " chair / type 'Maui'",
+          "Translation_DE": " Stuhl / Type 'Maui'"
+        },
+        {
+          "name": "Chair / type 'Sestri'",
+          "Translation_NL": " stoel / type 'Sestri'",
+          "Translation_EN": " chair / type 'Sestri'",
+          "Translation_DE": " Stuhl / Type 'Sestri'"
+        },
+        {
+          "name": "Chair / type 'Vada'",
+          "Translation_NL": " stoel / type 'Vada'",
+          "Translation_EN": " chair / type 'Vada'",
+          "Translation_DE": " Stuhl / Type 'Vada'"
+        },
+        {
+          "name": "Sofa",
+          "Translation_NL": "fauteuil",
+          "Translation_EN": " sofa",
+          "Translation_DE": " Sofa"
+        },
+        {
+          "name": "Sofa / type 'Cadiz'",
+          "Translation_NL": " fauteuil / type 'Cadiz'",
+          "Translation_EN": " sofa / type 'Cadiz'",
+          "Translation_DE": " Sofa / Type 'Cadiz'"
+        },
+        {
+          "name": "Sofa / type 'Favara I'",
+          "Translation_NL": " fauteuil / type 'Favara I'",
+          "Translation_EN": " sofa / type 'Favara I'",
+          "Translation_DE": " Sofa / Type 'Favara I'"
+        },
+        {
+          "name": "Couch",
+          "Translation_NL": "bank",
+          "Translation_EN": " couch",
+          "Translation_DE": " Couch"
+        },
+        {
+          "name": "Couch / type 'Favara II'",
+          "Translation_NL": " bank / type 'Favara II'",
+          "Translation_EN": " couch / type 'Favara II'",
+          "Translation_DE": " Couch / Type 'Favara II'"
+        },
+        {
+          "name": "High table",
+          "Translation_NL": "statafel",
+          "Translation_EN": " high table",
+          "Translation_DE": " Stehtisch"
+        },
+        {
+          "name": "High table / type 'Trevi'",
+          "Translation_NL": " statafel / type 'Trevi'",
+          "Translation_EN": " high table / type 'Trevi'",
+          "Translation_DE": " Stehtisch / Type 'Trevi'"
+        },
+        {
+          "name": "Barstool",
+          "Translation_NL": "barkruk",
+          "Translation_EN": " barstool",
+          "Translation_DE": " Barhocker"
+        },
+        {
+          "name": "Barstool / type 'Busalla'",
+          "Translation_NL": " barkruk / type 'Busalla'",
+          "Translation_EN": " barstool / type 'Busalla'",
+          "Translation_DE": " Barhocker / Type 'Busalla'"
+        },
+        {
+          "name": "Barstool / type 'Catifa'",
+          "Translation_NL": " barkruk / type 'Catifa'",
+          "Translation_EN": " barstool / type 'Catifa'",
+          "Translation_DE": " Barhocker / Type 'Catifa'"
+        },
+        {
+          "name": "Barstool / type 'Ciao'",
+          "Translation_NL": " barkruk / type 'Ciao'",
+          "Translation_EN": " barstool / type 'Ciao'",
+          "Translation_DE": " Barhocker / Type 'Caio'"
+        },
+        {
+          "name": "Barstool / type 'Flash'",
+          "Translation_NL": " barkruk / type 'Flash'",
+          "Translation_EN": " barstool / type 'Flash'",
+          "Translation_DE": " Barhocker / Type 'Flash'"
+        },
+        {
+          "name": "Barstool / type 'Pantano'",
+          "Translation_NL": " barkruk / type 'Pantano'",
+          "Translation_EN": " barstool / type 'Pantano'",
+          "Translation_DE": " Barhocker / Type 'Pantano'"
+        },
+        {
+          "name": "Barstool / type 'Parona'",
+          "Translation_NL": " barkruk / type 'Parona'",
+          "Translation_EN": " barstool / type 'Parona'",
+          "Translation_DE": " Barhocker / Type 'Parona'"
+        },
+        {
+          "name": "Barstool / type 'Paterno'",
+          "Translation_NL": " barkruk / type 'Paterno'",
+          "Translation_EN": " barstool / type 'Paterno'",
+          "Translation_DE": " Barhocker / Type 'Paterno'"
+        },
+        {
+          "name": "Barstool / type 'Patti'",
+          "Translation_NL": " barkruk / type 'Patti'",
+          "Translation_EN": " barstool / type 'Patti'",
+          "Translation_DE": " Barhocker / Type 'Patti'"
+        },
+        {
+          "name": "Barstool / type 'Pesia'",
+          "Translation_NL": " barkruk / type 'Pesia'",
+          "Translation_EN": " barstool / type 'Pesia'",
+          "Translation_DE": " Barhocker / Type 'Pesia'"
+        },
+        {
+          "name": "Barstool / type 'Petilia'",
+          "Translation_NL": " barkruk / type 'Petilia'",
+          "Translation_EN": " barstool / type 'Petilia'",
+          "Translation_DE": " Barhocker / Type 'Petilia'"
+        },
+        {
+          "name": "Barstool / type 'Puck'",
+          "Translation_NL": " barkruk / type 'Puck'",
+          "Translation_EN": " barstool / type 'Puck'",
+          "Translation_DE": " Barhocker / Type 'Puck'"
+        },
+        {
+          "name": "Brochure rack",
+          "Translation_NL": "folderrek",
+          "Translation_EN": " brochure rack",
+          "Translation_DE": " Broschürebehalter"
+        },
+        {
+          "name": "No entry poles",
+          "Translation_NL": "no entry paaltjes",
+          "Translation_EN": " no entry poles",
+          "Translation_DE": " No Entry Absperrsystem"
+        },
+        {
+          "name": "Folding chair",
+          "Translation_NL": "klapstoel",
+          "Translation_EN": " folding chair",
+          "Translation_DE": " Klappstuhl"
+        },
+        {
+          "name": "Cabinet / type 'Benevento'",
+          "Translation_NL": " kast / type 'Benevento'",
+          "Translation_EN": " cabinet / type 'Benevento'",
+          "Translation_DE": " Schrank / Type 'Benevento'"
+        },
+        {
+          "name": "Seating",
+          "Translation_NL": "zitelement",
+          "Translation_EN": " seating",
+          "Translation_DE": " Sitzelement"
+        },
+        {
+          "name": "Chair",
+          "Translation_NL": " stoel",
+          "Translation_EN": " chair",
+          "Translation_DE": " Stuhl"
+        },
+        {
+          "name": "Stool",
+          "Translation_NL": "kruk",
+          "Translation_EN": " stool",
+          "Translation_DE": " Hocker"
+        },
+        {
+          "name": "Armstoel LJ1 lichtgrijs / zwart staal",
+          "Translation_NL": "Armstoel LJ1 lichtgrijs / zwart staal",
+          "Translation_EN": "Armchair LJ1 light gray / black steel",
+          "Translation_DE": "Sessel LJ1 hellgrau / schwarzer Stahl"
+        },
+        {
+          "name": "Barkruk LJ3 lichtgrijs / zwart staal",
+          "Translation_NL": "Barkruk LJ3 lichtgrijs / zwart staal",
+          "Translation_EN": "Bar stool LJ3 light gray / black steel",
+          "Translation_DE": "Barhocker LJ3, hellgrau/schwarz, Stahl"
+        },
+        {
+          "name": "Statafel Copenhague CPH20 houten poten/offwhite blad Ø 70",
+          "Translation_NL": "Statafel Type: Copenhague CPH20  houten poten/offwhite blad Ø 70",
+          "Translation_EN": "High table Type: Copenhague CPH20 wooden legs/off-white top Ø 70",
+          "Translation_DE": "Stehtisch Typ: Copenhague CPH20 Holzbeine/cremeweiße Tischplatte Ø 70"
+        },
+        {
+          "name": "Amagni soft - groen",
+          "Translation_NL": "stoel / type \"Amagni soft\" / groen",
+          "Translation_EN": "chair / type \"Amagni soft\" / green",
+          "Translation_DE": "Stuhl / Typ \"Amagni soft\" / grun"
+        },
+        {
+          "name": "Barkruk About a chair",
+          "Translation_NL": "barkruk / type \"about a chair\"",
+          "Translation_EN": "bar stool / type \"about a chair\"",
+          "Translation_DE": "barhocker / Typ \"about a chair\""
+        },
+        {
+          "name": "Tafel rechthoekig 120 x 80 zwart",
+          "Translation_NL": "Tafel rechthoekig 120x80 cm zwart",
+          "Translation_EN": "Table rectangular 120x80 cm black",
+          "Translation_DE": "Tisch rechteckig 120x80 cm Schwarz"
+        },
+        {
+          "name": "Stoel zwart",
+          "Translation_NL": "Stoel zwart",
+          "Translation_EN": "Chair black",
+          "Translation_DE": "Stuhl Schwarz"
+        }
+      ]
+    }
+  ]
+}
