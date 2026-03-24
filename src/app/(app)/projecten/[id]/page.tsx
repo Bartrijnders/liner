@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import OfferteUpload from '@/components/OfferteUpload'
+import OfferteLijst from '@/components/OfferteLijst'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -94,22 +95,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 
         <OfferteUpload projectId={id} />
 
-        {/* Bestaande offertes */}
-        {offertes && offertes.length > 0 && (
-          <div className="mt-6 space-y-2">
-            {offertes.map((offerte) => (
-              <div key={offerte.id} className="space-y-1">
-                <div className="flex items-center justify-between border border-border/60 rounded-md px-5 py-3.5 text-sm">
-                  <span className="font-medium truncate">{offerte.bestandsnaam}</span>
-                  <StatusBadge status={offerte.status} />
-                </div>
-                {offerte.status === 'error' && offerte.fout_melding && (
-                  <p className="text-xs text-destructive px-1">{offerte.fout_melding}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        <OfferteLijst initialOffertes={offertes ?? []} projectId={id} />
       </div>
     </div>
   )
@@ -126,22 +112,3 @@ function MetaVeld({ label, waarde }: { label: string; waarde?: string | null }) 
   )
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    uploaded: 'bg-muted text-muted-foreground',
-    processing: 'bg-amber-100 text-amber-800',
-    done: 'bg-green-100 text-green-800',
-    error: 'bg-red-100 text-red-800',
-  }
-  const labels: Record<string, string> = {
-    uploaded: 'Geüpload',
-    processing: 'Verwerken',
-    done: 'Klaar',
-    error: 'Fout',
-  }
-  return (
-    <span className={`text-xs font-medium px-2 py-0.5 rounded ${styles[status] ?? styles.uploaded}`}>
-      {labels[status] ?? status}
-    </span>
-  )
-}
