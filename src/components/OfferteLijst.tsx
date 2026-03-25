@@ -15,12 +15,16 @@ type Offerte = {
   created_at: string
 }
 
+type ValidatieCount = { total: number; validated: number }
+
 export default function OfferteLijst({
   initialOffertes,
   projectId,
+  validatieCounts = {},
 }: {
   initialOffertes: Offerte[]
   projectId: string
+  validatieCounts?: Record<string, ValidatieCount>
 }) {
   const [offertes, setOffertes] = useState<Offerte[]>(initialOffertes)
   const [openRegelId, setOpenRegelId] = useState<string | null>(null)
@@ -78,6 +82,7 @@ export default function OfferteLijst({
               <div className="flex items-center gap-2 shrink-0">
                 {offerte.status === 'done' && (
                   <>
+                    <ValidatieBadge counts={validatieCounts[offerte.id]} />
                     <button
                       onClick={() => setOpenRegelId(openRegelId === offerte.id ? null : offerte.id)}
                       className="btn-secondary btn-sm"
@@ -117,6 +122,22 @@ export default function OfferteLijst({
         </div>
       ))}
     </div>
+  )
+}
+
+function ValidatieBadge({ counts }: { counts?: ValidatieCount }) {
+  if (!counts || counts.total === 0) return null
+  if (counts.validated >= counts.total) {
+    return (
+      <span className="text-xs font-medium px-2 py-1 rounded-md bg-green-100 text-green-700">
+        Gevalideerd
+      </span>
+    )
+  }
+  return (
+    <span className="text-xs font-medium px-2 py-1 rounded-md bg-amber-100 text-amber-700">
+      {counts.validated} / {counts.total} gevalideerd
+    </span>
   )
 }
 

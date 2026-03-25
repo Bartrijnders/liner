@@ -1,29 +1,43 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import CalculatieClient from './CalculatieClient'
 
-type Props = { params: Promise<{ id: string }> }
+type Props = { params: Promise<{ id: string; calcId: string }> }
 
 export default async function CalculatiePage({ params }: Props) {
-  const { id: projectId } = await params
+  const { id: projectId, calcId } = await params
   const supabase = await createClient()
 
-  const { data: project } = await supabase
-    .from('projecten')
-    .select('id, naam, show_naam, project_manager, m2, fee, pm_kosten, korting_1, korting_2, av_kosten, opslag_kosten')
-    .eq('id', projectId)
-    .single()
+  const [{ data: project }, { data: calculatie }, { data: alleOffertes }] = await Promise.all([
+    supabase
+      .from('projecten')
+      .select('id, naam')
+      .eq('id', projectId)
+      .single(),
+    supabase
+      .from('calculaties')
+      .select('id, naam, fee, pm_kosten, korting_1, korting_2, av_kosten, opslag_kosten')
+      .eq('id', calcId)
+      .single(),
+    supabase
+      .from('offertes')
+      .select('id, bestandsnaam, status')
+      .eq('project_id', projectId)
+      .neq('bestandsnaam', '__handmatig__')
+      .order('created_at', { ascending: true }),
+  ])
 
-  if (!project) notFound()
+  if (!project || !calculatie) notFound()
 
-  const { data: offertes } = await supabase
-    .from('offertes')
-    .select('id')
-    .eq('project_id', projectId)
+  // Geselecteerde offertes voor deze calculatie
+  const { data: gekoppeldeOffertes } = await supabase
+    .from('calculatie_offertes')
+    .select('offerte_id')
+    .eq('calculatie_id', calcId)
 
-  const offerteIds = (offertes ?? []).map(o => o.id)
+  const geselecteerdeIds = new Set((gekoppeldeOffertes ?? []).map(r => r.offerte_id))
 
+  // Haal orderregels op uit geselecteerde offertes (geen validatiefilter)
   let subgroupsRaw: {
     subgroupId: string
     subgroupNaam: string
@@ -42,6 +56,8 @@ export default async function CalculatiePage({ params }: Props) {
 
   const subgroupElementMap: Record<string, string> = {}
 
+  const offerteIds = [...geselecteerdeIds]
+
   if (offerteIds.length > 0) {
     const { data: rawRegels } = await supabase
       .from('orderregels')
@@ -53,8 +69,6 @@ export default async function CalculatiePage({ params }: Props) {
         )
       `)
       .in('offerte_id', offerteIds)
-      .not('subgroup_element_id', 'is', null)
-      .or('validated_at.not.is.null,confidence.eq.HIGH')
 
     const regels = (rawRegels ?? []).map((r: any) => {
       const el = Array.isArray(r.subgroup_elements) ? (r.subgroup_elements[0] ?? null) : r.subgroup_elements
@@ -72,7 +86,7 @@ export default async function CalculatiePage({ params }: Props) {
         subgroupId: sg?.id as string | null,
         subgroupNaam: sg?.naam as string | null,
       }
-    }).filter(r => r.subgroupId && r.subgroupNaam)
+    })
 
     // Build first-element-per-subgroup map (for manual row creation)
     for (const r of regels) {
@@ -82,56 +96,47 @@ export default async function CalculatiePage({ params }: Props) {
     }
 
     const subgroupMap = new Map<string, typeof subgroupsRaw[0]>()
-    for (const r of regels) {
+
+    // Regels met subgroup
+    for (const r of regels.filter(r => r.subgroupId)) {
       const key = r.subgroupId!
       if (!subgroupMap.has(key)) {
-        subgroupMap.set(key, { subgroupId: r.subgroupId!, subgroupNaam: r.subgroupNaam!, regels: [] })
+        subgroupMap.set(key, { subgroupId: key, subgroupNaam: r.subgroupNaam!, regels: [] })
       }
       subgroupMap.get(key)!.regels.push(r)
     }
+
     subgroupsRaw = [...subgroupMap.values()].sort((a, b) => a.subgroupNaam.localeCompare(b.subgroupNaam))
+
+    // Regels zonder subgroup in aparte groep
+    const ongecategoriseerd = regels.filter(r => !r.subgroupId)
+    if (ongecategoriseerd.length > 0) {
+      subgroupsRaw.push({
+        subgroupId: '__geen__',
+        subgroupNaam: 'Niet gecategoriseerd',
+        regels: ongecategoriseerd,
+      })
+    }
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="space-y-1">
-          <Link
-            href={`/projecten/${projectId}`}
-            className="inline-flex items-center gap-2 text-sm font-semibold transition-colors"
-            style={{ color: '#42474d' }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-            {project.naam}
-          </Link>
-          <h1 className="text-3xl font-extrabold tracking-tight" style={{ color: '#1c1c1a', fontFamily: 'var(--font-manrope)' }}>
-            Calculatie
-          </h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href={`/projecten/${projectId}/balans`} className="btn-secondary">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>balance</span>
-            Balans
-          </Link>
-          <a href={`/api/projecten/${projectId}/export`} className="btn-primary">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>download</span>
-            Exporteren
-          </a>
-        </div>
-      </div>
-
+    <div className="space-y-8">
       <CalculatieClient
         projectId={projectId}
+        calcId={calcId}
         subgroupsRaw={subgroupsRaw}
         subgroupElementMap={subgroupElementMap}
-        initialFee={project.fee ?? 1.30}
-        initialPmKosten={project.pm_kosten ?? 0}
-        initialKorting1={project.korting_1 ?? 0}
-        initialKorting2={project.korting_2 ?? 0}
-        initialAvKosten={project.av_kosten ?? 0}
-        initialOpslagKosten={project.opslag_kosten ?? 0}
+        alleOffertes={alleOffertes ?? []}
+        geselecteerdeOfferteIds={[...geselecteerdeIds]}
+        initialNaam={calculatie.naam}
+        initialFee={calculatie.fee ?? 1.30}
+        initialPmKosten={calculatie.pm_kosten ?? 0}
+        initialKorting1={calculatie.korting_1 ?? 0}
+        initialKorting2={calculatie.korting_2 ?? 0}
+        initialAvKosten={calculatie.av_kosten ?? 0}
+        initialOpslagKosten={calculatie.opslag_kosten ?? 0}
       />
     </div>
   )
 }
+

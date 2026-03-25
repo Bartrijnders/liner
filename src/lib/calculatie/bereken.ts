@@ -9,28 +9,21 @@ export function parseGeldBedrag(str: string | null | undefined): number | null {
   const hasDot = s.includes('.')
 
   if (hasComma && hasDot) {
-    // Beide aanwezig — bepaal welke het decimaalscheidingsteken is op basis van positie
     const lastComma = s.lastIndexOf(',')
     const lastDot = s.lastIndexOf('.')
     if (lastComma > lastDot) {
-      // Europees: 1.267,08 → punt is duizendteken, komma is decimaal
       s = s.replace(/\./g, '').replace(',', '.')
     } else {
-      // Angelsaksisch: 1,267.08 → komma is duizendteken, punt is decimaal
       s = s.replace(/,/g, '')
     }
   } else if (hasComma) {
-    // Alleen komma — check of het een duizendteken is (3 cijfers na komma) of decimaal
     const afterComma = s.split(',')[1] ?? ''
     if (afterComma.length === 3 && !afterComma.includes('.')) {
-      // Waarschijnlijk duizendteken: 1,267
       s = s.replace(',', '')
     } else {
-      // Decimaalkomma: 122,82
       s = s.replace(',', '.')
     }
   }
-  // Verwijder resterende niet-numerieke tekens (behalve punt en min)
   s = s.replace(/[^0-9.\-]/g, '')
   const n = parseFloat(s)
   return isNaN(n) ? null : n
@@ -38,7 +31,6 @@ export function parseGeldBedrag(str: string | null | undefined): number | null {
 
 export function parseHoeveelheid(str: string | null | undefined): number | null {
   if (!str) return null
-  // Pak het eerste getal (inclusief decimalen) aan het begin van de string
   const match = str.trim().replace(',', '.').match(/^(\d+(?:\.\d+)?)/)
   if (!match) return null
   const n = parseFloat(match[1])
@@ -66,6 +58,8 @@ export interface RegelCalculatie {
   eenheid: string | null
   stukprijs: number | null
   inkoop: number | null
+  verkoopprijs: number | null   // per-regel verkoopprijs (formula of override)
+  marge: number | null          // per-regel marge (verkoopprijs - inkoop)
   waarschuwing: boolean
 }
 
@@ -74,7 +68,7 @@ export interface SubgroupCalculatie {
   subgroupNaam: string
   regels: RegelCalculatie[]
   totaalInkoop: number
-  verkoopprijs: number
+  verkoopprijs: number          // som van per-regel verkoopprijzen
   marge: number
 }
 
@@ -97,7 +91,15 @@ export function berekenProjectCalculatie(
   subgroupsRaw: {
     subgroupId: string
     subgroupNaam: string
-    regels: { orderegelId: string; omschrijving: string; hoeveelheid: string | null; eenheid: string | null; stukprijs: string | null; totaalprijs: string | null }[]
+    regels: {
+      orderegelId: string
+      omschrijving: string
+      hoeveelheid: string | null
+      eenheid: string | null
+      stukprijs: string | null
+      totaalprijs: string | null
+      verkoopOverride?: string | null
+    }[]
   }[],
   fee: number,
   pmKosten: number,
@@ -116,16 +118,20 @@ export function berekenProjectCalculatie(
       let stukprijs: number | null = prijs
 
       if (hoev !== null && prijs !== null) {
-        // Primair: stukprijs × hoeveelheid
         inkoop = hoev * prijs
       } else if (totaal !== null) {
-        // Fallback: totaalprijs direct gebruiken
         inkoop = totaal
-        // Leid stukprijs af als hoeveelheid bekend is
         if (hoev !== null && hoev > 0) stukprijs = totaal / hoev
       } else {
         inkoop = null
       }
+
+      // Per-regel verkoopprijs: override of ROUNDUP-formule (zoals Excel col F)
+      const overrideVal = r.verkoopOverride ? parseGeldBedrag(r.verkoopOverride) : null
+      const verkoopprijs = inkoop !== null
+        ? (overrideVal ?? berekenVerkoopprijs(inkoop, fee))
+        : null
+      const marge = verkoopprijs !== null && inkoop !== null ? verkoopprijs - inkoop : null
 
       return {
         orderegelId: r.orderegelId,
@@ -134,13 +140,16 @@ export function berekenProjectCalculatie(
         eenheid: r.eenheid,
         stukprijs,
         inkoop,
+        verkoopprijs,
+        marge,
         waarschuwing: inkoop === null,
       }
     })
 
     const totaalInkoop = regels.reduce((sum, r) => sum + (r.inkoop ?? 0), 0)
-    const verkoopprijs = berekenVerkoopprijs(totaalInkoop, fee)
-    const marge = berekenMarge(totaalInkoop, verkoopprijs)
+    // Som van per-regel verkoopprijzen (niet ROUNDUP van het subtotaal — exact als Excel)
+    const verkoopprijs = regels.reduce((sum, r) => sum + (r.verkoopprijs ?? 0), 0)
+    const marge = verkoopprijs - totaalInkoop
 
     return { subgroupId: sg.subgroupId, subgroupNaam: sg.subgroupNaam, regels, totaalInkoop, verkoopprijs, marge }
   })

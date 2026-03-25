@@ -25,6 +25,12 @@ type SubgroupRaw = {
   regels: RegelRaw[]
 }
 
+type OfferteInfo = {
+  id: string
+  bestandsnaam: string
+  status: string
+}
+
 type EditableRegel = {
   orderegelId: string
   displayNaam: string
@@ -32,7 +38,7 @@ type EditableRegel = {
   eenheid: string
   stukprijs: string
   totaalprijs: string | null
-  verkoopOverride: string   // '' = geen override, getal = override
+  verkoopOverride: string
 }
 
 type EditableSubgroup = {
@@ -43,8 +49,12 @@ type EditableSubgroup = {
 
 type Props = {
   projectId: string
+  calcId: string
   subgroupsRaw: SubgroupRaw[]
   subgroupElementMap: Record<string, string>
+  alleOffertes: OfferteInfo[]
+  geselecteerdeOfferteIds: string[]
+  initialNaam: string
   initialFee: number
   initialPmKosten: number
   initialKorting1: number
@@ -96,8 +106,12 @@ function toCalcInput(editableSubgroups: EditableSubgroup[]) {
 
 export default function CalculatieClient({
   projectId,
+  calcId,
   subgroupsRaw,
   subgroupElementMap,
+  alleOffertes,
+  geselecteerdeOfferteIds,
+  initialNaam,
   initialFee,
   initialPmKosten,
   initialKorting1,
@@ -105,6 +119,7 @@ export default function CalculatieClient({
   initialAvKosten,
   initialOpslagKosten,
 }: Props) {
+  const [naam, setNaam] = useState(initialNaam)
   const [editableSubgroups, setEditableSubgroups] = useState<EditableSubgroup[]>(
     subgroupsRaw.map(toEditable)
   )
@@ -114,6 +129,9 @@ export default function CalculatieClient({
   const [korting2, setKorting2] = useState(initialKorting2)
   const [avKosten, setAvKosten] = useState(initialAvKosten)
   const [opslagKosten, setOpslagKosten] = useState(initialOpslagKosten)
+  const [geselecteerd, setGeselecteerd] = useState<Set<string>>(new Set(geselecteerdeOfferteIds))
+  const [offertesSaving, setOffertesSaving] = useState(false)
+  const [sgElementMap, setSgElementMap] = useState<Record<string, string>>(subgroupElementMap)
 
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
   const manualOfferteRef = useRef<string | null>(null)
@@ -124,10 +142,10 @@ export default function CalculatieClient({
   )
   const calcSubgroupMap = new Map(calc.subgroups.map(sg => [sg.subgroupId, sg]))
 
-  function debouncedSaveProject(field: string, value: number) {
+  function debouncedSave(field: string, value: unknown) {
     clearTimeout(saveTimers.current[field])
     saveTimers.current[field] = setTimeout(() => {
-      fetch(`/api/projecten/${projectId}`, {
+      fetch(`/api/calculaties/${calcId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [field]: value }),
@@ -137,13 +155,81 @@ export default function CalculatieClient({
 
   function handleFee(val: string) {
     const n = parseFloat(val)
-    if (!isNaN(n)) { setFee(n); debouncedSaveProject('fee', n) }
+    if (!isNaN(n)) { setFee(n); debouncedSave('fee', n) }
   }
 
   function handleKosten(setter: (v: number) => void, field: string, val: string) {
     const n = parseFloat(val) || 0
     setter(n)
-    debouncedSaveProject(field, n)
+    debouncedSave(field, n)
+  }
+
+  function handleNaamBlur() {
+    debouncedSave('naam', naam)
+  }
+
+  async function fetchRegels(offerteIds: string[]) {
+    if (offerteIds.length === 0) {
+      setEditableSubgroups([])
+      setSgElementMap({})
+      return
+    }
+    const supabase = createClient()
+    const { data: rawRegels } = await supabase
+      .from('orderregels')
+      .select(`
+        id, omschrijving, localized_naam, hoeveelheid, eenheid, stukprijs, totaalprijs, verkoop_override,
+        subgroup_elements!subgroup_element_id (
+          id, naam,
+          subgroups ( id, naam )
+        )
+      `)
+      .in('offerte_id', offerteIds)
+
+    const newSgElementMap: Record<string, string> = {}
+    const subgroupMap = new Map<string, SubgroupRaw>()
+    const uncategorised: RegelRaw[] = []
+
+    for (const r of rawRegels ?? []) {
+      const el = Array.isArray(r.subgroup_elements) ? (r.subgroup_elements[0] ?? null) : r.subgroup_elements
+      const sg = el ? (Array.isArray(el.subgroups) ? (el.subgroups[0] ?? null) : el.subgroups) : null
+      const regel: RegelRaw = {
+        orderegelId: r.id,
+        displayNaam: r.localized_naam ?? el?.naam ?? r.omschrijving ?? '',
+        omschrijving: r.omschrijving ?? '',
+        hoeveelheid: r.hoeveelheid,
+        eenheid: r.eenheid,
+        stukprijs: r.stukprijs,
+        totaalprijs: r.totaalprijs,
+        verkoopOverride: r.verkoop_override != null ? String(r.verkoop_override) : null,
+        elementId: el?.id ?? null,
+      }
+      if (!sg) { uncategorised.push(regel); continue }
+      if (sg.id && el?.id && !newSgElementMap[sg.id]) newSgElementMap[sg.id] = el.id
+      if (!subgroupMap.has(sg.id)) subgroupMap.set(sg.id, { subgroupId: sg.id, subgroupNaam: sg.naam, regels: [] })
+      subgroupMap.get(sg.id)!.regels.push(regel)
+    }
+
+    const sorted = [...subgroupMap.values()].sort((a, b) => a.subgroupNaam.localeCompare(b.subgroupNaam))
+    if (uncategorised.length > 0) sorted.push({ subgroupId: '__geen__', subgroupNaam: 'Niet gecategoriseerd', regels: uncategorised })
+
+    setSgElementMap(newSgElementMap)
+    setEditableSubgroups(sorted.map(toEditable))
+  }
+
+  async function toggleOfferte(offerteId: string) {
+    const nieuw = new Set(geselecteerd)
+    if (nieuw.has(offerteId)) nieuw.delete(offerteId)
+    else nieuw.add(offerteId)
+    setGeselecteerd(nieuw)
+    setOffertesSaving(true)
+    await fetch(`/api/calculaties/${calcId}/offertes`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ offerteIds: [...nieuw] }),
+    })
+    await fetchRegels([...nieuw])
+    setOffertesSaving(false)
   }
 
   function updateRegel(subgroupId: string, orderegelId: string, updates: Partial<EditableRegel>) {
@@ -177,7 +263,8 @@ export default function CalculatieClient({
   }
 
   async function addManualRow(subgroupId: string) {
-    const elementId = subgroupElementMap[subgroupId]
+    if (subgroupId === '__geen__') return
+    const elementId = sgElementMap[subgroupId]
     if (!elementId) return
     const offerteId = await getOrCreateManualOfferte()
     const supabase = createClient()
@@ -186,8 +273,6 @@ export default function CalculatieClient({
       omschrijving: 'Nieuwe regel',
       localized_naam: 'Nieuwe regel',
       subgroup_element_id: elementId,
-      validated_at: new Date().toISOString(),
-      confidence: 'HIGH',
     }).select('id').single()
     if (!data) return
     setEditableSubgroups(prev => prev.map(sg =>
@@ -210,6 +295,52 @@ export default function CalculatieClient({
 
   return (
     <div className="space-y-6">
+      {/* Naam + Offertes selector */}
+      <div className="rounded-2xl bg-white border border-slate-200 p-6 space-y-4">
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Naam calculatie</p>
+            <input
+              type="text"
+              value={naam}
+              onChange={e => setNaam(e.target.value)}
+              onBlur={handleNaamBlur}
+              className="w-full text-base font-semibold text-slate-900 border-b-2 border-slate-200 focus:border-slate-700 outline-none bg-transparent pb-1"
+            />
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
+            Inkoop offertes {offertesSaving && <span className="font-normal normal-case text-slate-400">opslaan…</span>}
+          </p>
+          {alleOffertes.length === 0 ? (
+            <p className="text-sm text-slate-400">Nog geen offertes geüpload.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {alleOffertes.map(o => (
+                <button
+                  key={o.id}
+                  onClick={() => toggleOfferte(o.id)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium border transition-colors ${
+                    geselecteerd.has(o.id)
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
+                  }`}
+                >
+                  {geselecteerd.has(o.id) && (
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>check</span>
+                  )}
+                  {o.bestandsnaam}
+                  {o.status !== 'done' && (
+                    <span className="text-amber-500 ml-1">({o.status})</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Fee + Summary bar */}
       <div className="rounded-2xl bg-white border border-slate-200 p-6 grid grid-cols-2 md:grid-cols-4 gap-6">
         <div className="space-y-1">
@@ -232,7 +363,7 @@ export default function CalculatieClient({
 
       {editableSubgroups.length === 0 && (
         <div className="rounded-2xl bg-white border border-slate-200 p-12 text-center text-sm text-slate-400">
-          Geen gevalideerde orderregels met een gekoppeld element gevonden.
+          Selecteer één of meer offertes om de calculatie te vullen.
         </div>
       )}
 
@@ -249,6 +380,7 @@ export default function CalculatieClient({
             onUpdateRegel={(id, updates) => updateRegel(sg.subgroupId, id, updates)}
             onSaveRegel={saveRegel}
             onAddRow={() => addManualRow(sg.subgroupId)}
+            canAddRow={sg.subgroupId !== '__geen__' && !!sgElementMap[sg.subgroupId]}
           />
         )
       })}
@@ -281,7 +413,7 @@ export default function CalculatieClient({
 // ─── Editable Subgroup Card ───────────────────────────────────────────────────
 
 function EditableSubgroupCard({
-  sg, fee, totaalInkoop, verkoopprijs, marge, onUpdateRegel, onSaveRegel, onAddRow,
+  sg, fee, totaalInkoop, verkoopprijs, marge, onUpdateRegel, onSaveRegel, onAddRow, canAddRow,
 }: {
   sg: EditableSubgroup
   fee: number
@@ -291,6 +423,7 @@ function EditableSubgroupCard({
   onUpdateRegel: (orderegelId: string, updates: Partial<EditableRegel>) => void
   onSaveRegel: (orderegelId: string, dbUpdates: Record<string, string | number | null>) => void
   onAddRow: () => void
+  canAddRow: boolean
 }) {
   return (
     <div className="rounded-2xl bg-white border border-slate-200 overflow-hidden">
@@ -322,17 +455,19 @@ function EditableSubgroupCard({
             ))}
           </tbody>
           <tfoot>
-            <tr>
-              <td colSpan={7} className="px-4 py-2">
-                <button
-                  onClick={onAddRow}
-                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 transition-colors"
-                >
-                  <Plus size={12} />
-                  Regel toevoegen
-                </button>
-              </td>
-            </tr>
+            {canAddRow && (
+              <tr>
+                <td colSpan={7} className="px-4 py-2">
+                  <button
+                    onClick={onAddRow}
+                    className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 transition-colors"
+                  >
+                    <Plus size={12} />
+                    Regel toevoegen
+                  </button>
+                </td>
+              </tr>
+            )}
             <tr className="border-t-2 border-slate-200 bg-slate-50">
               <td colSpan={4} className="px-6 py-3 text-xs font-semibold text-slate-500 text-right">Totaal inkoop</td>
               <td className="px-3 py-3 text-sm font-bold text-slate-900 text-right">{euro(totaalInkoop)}</td>
@@ -346,7 +481,7 @@ function EditableSubgroupCard({
   )
 }
 
-// ─── Regel Row (eigen component voor locale state) ────────────────────────────
+// ─── Regel Row ────────────────────────────────────────────────────────────────
 
 function RegelRow({
   r, fee, onUpdate, onSave,
@@ -356,11 +491,9 @@ function RegelRow({
   onUpdate: (updates: Partial<EditableRegel>) => void
   onSave: (dbUpdates: Record<string, string | number | null>) => void
 }) {
-  // Lokale state voor het bewerken van marge/verkoopprijs inputs
   const [editingMarge, setEditingMarge] = useState<string | null>(null)
   const [editingVerkoop, setEditingVerkoop] = useState<string | null>(null)
 
-  // Berekende waarden
   const hoev = parseHoeveelheid(r.hoeveelheid)
   const prijs = parseGeldBedrag(r.stukprijs)
   const totaal = r.totaalprijs ? parseGeldBedrag(r.totaalprijs) : null
@@ -385,10 +518,7 @@ function RegelRow({
 
   function onMargeBlur() {
     setEditingMarge(null)
-    // Sla de actuele verkoopprijs op als override
-    if (verkoopprijs !== null) {
-      onSave({ verkoop_override: verkoopprijs })
-    }
+    if (verkoopprijs !== null) onSave({ verkoop_override: verkoopprijs })
   }
 
   function onVerkoopChange(val: string) {
@@ -402,7 +532,6 @@ function RegelRow({
     onSave({ verkoop_override: n })
   }
 
-  // Display waarden voor marge en verkoop inputs
   const margeDisplay = editingMarge ?? (marge !== null ? marge.toFixed(2) : '')
   const verkoopDisplay = editingVerkoop
     ? editingVerkoop
@@ -449,11 +578,9 @@ function RegelRow({
           className={inp('text-right text-slate-600')}
         />
       </td>
-      {/* Inkoop — altijd berekend, read-only */}
       <td className="px-3 py-1.5 text-sm text-slate-700 text-right whitespace-nowrap">
         {inkoop !== null ? euro(inkoop) : <span className="text-amber-500">!</span>}
       </td>
-      {/* Marge — bewerken stelt verkoopOverride in */}
       <td className="px-3 py-1.5">
         <input
           type="text"
@@ -464,7 +591,6 @@ function RegelRow({
           className={inp(`text-right ${marge !== null && marge < 0 ? 'text-red-600' : 'text-green-700'}`)}
         />
       </td>
-      {/* Verkoopprijs — direct override of berekend; blauw als overschreven */}
       <td className="px-3 py-1.5">
         <input
           type="text"

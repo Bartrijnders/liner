@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(mkdir -p /Users/bartrijnders/Documents/Projects/liner/src/app/api/calculaties/[id]/offertes)",
+      "Bash(mkdir -p /Users/bartrijnders/Documents/Projects/liner/src/app/\\\\\\(app\\\\\\)/projecten/[id]/calculaties/[calcId]/balans)",
+      "Bash(node:*)"
     ]
   }
 }
