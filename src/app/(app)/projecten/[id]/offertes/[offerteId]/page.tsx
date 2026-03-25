@@ -23,6 +23,7 @@ export default async function ValidatiePage({
     .from('orderregels')
     .select(`
       id, regelnummer, omschrijving, details,
+      hoeveelheid, eenheid, stukprijs, totaalprijs,
       clean_desc, clean_details, category_hint,
       confidence, match_reasoning, suggested_match_term,
       subgroup_element_id, override_element_id, validated_at, localized_naam,
@@ -37,6 +38,11 @@ export default async function ValidatiePage({
   const { data: rawElementen } = await supabase
     .from('subgroup_elements')
     .select('id, naam, subgroups(naam)')
+    .order('naam', { ascending: true })
+
+  const { data: rawSubgroups } = await supabase
+    .from('subgroups')
+    .select('id, naam')
     .order('naam', { ascending: true })
 
   // Supabase returns joined relations as arrays; cast to expected shape
@@ -72,6 +78,7 @@ export default async function ValidatiePage({
         offerteId={offerteId}
         orderregels={orderregels}
         allElementen={allElementen}
+        allSubgroups={rawSubgroups ?? []}
       />
     </div>
   )

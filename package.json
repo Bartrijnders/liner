@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
+    "exceljs": "^4.4.0",
     "fastest-levenshtein": "^1.0.16",
     "lucide-react": "^1.6.0",
     "next": "16.2.1",
@@ -39,5 +40,19 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
-  }
+  },
+  "description": "> Interne offerteverwerking voor The Doc — van leveranciers-PDF naar gevalideerde orderregels.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bartrijnders/liner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Bartrijnders/liner/issues"
+  },
+  "homepage": "https://github.com/Bartrijnders/liner#readme"
 }

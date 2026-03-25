@@ -3,10 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -32,55 +28,87 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-8">
+    <div
+      className="flex min-h-screen items-center justify-center px-4"
+      style={{ backgroundColor: '#fcf9f6' }}
+    >
+      <div className="w-full max-w-sm space-y-10">
+        {/* Merk */}
         <div className="text-center space-y-1">
-          <p className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+          <p
+            className="text-[10px] font-bold uppercase tracking-widest"
+            style={{ color: 'rgba(66, 71, 77, 0.6)' }}
+          >
             The Doc
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Liner</h1>
+          <h1
+            className="text-4xl font-extrabold tracking-tight"
+            style={{ color: '#1c1c1a', fontFamily: 'var(--font-manrope)' }}
+          >
+            Liner
+          </h1>
         </div>
 
-        <Card className="border-border/50 shadow-none">
-          <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Formulier */}
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px #e2e8f0' }}>
+          <form onSubmit={handleSubmit}>
+            <div className="p-8 space-y-6">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <label
+                  htmlFor="email"
+                  className="text-[13px] font-semibold"
+                  style={{ color: '#42474d' }}
+                >
                   E-mailadres
-                </Label>
-                <Input
+                </label>
+                <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="bg-background"
+                  className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-all focus:ring-2"
+                  style={{ backgroundColor: '#ebe8e5', border: 'none', color: '#1c1c1a' }}
+                  placeholder="naam@bedrijf.nl"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <label
+                  htmlFor="password"
+                  className="text-[13px] font-semibold"
+                  style={{ color: '#42474d' }}
+                >
                   Wachtwoord
-                </Label>
-                <Input
+                </label>
+                <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="bg-background"
+                  className="w-full rounded-lg px-4 py-3 text-sm outline-none transition-all focus:ring-2"
+                  style={{ backgroundColor: '#ebe8e5', border: 'none', color: '#1c1c1a' }}
+                  placeholder="••••••••"
                 />
               </div>
               {error && (
-                <p className="text-sm text-destructive">{error}</p>
+                <p className="text-sm" style={{ color: '#ba1a1a' }}>{error}</p>
               )}
-              <Button type="submit" className="w-full" disabled={loading}>
+            </div>
+
+            <div style={{ backgroundColor: '#f1f5f9', padding: '16px 32px', borderTop: '1px solid #e2e8f0' }}>
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full py-3"
+              >
                 {loading ? 'Laden...' : 'Inloggen'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

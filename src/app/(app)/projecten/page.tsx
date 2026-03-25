@@ -12,9 +12,14 @@ export default async function ProjectenPage() {
     supabase.from('klanten').select('id, naam').order('naam'),
   ])
 
+  const projectenGenormaliseerd = (projecten ?? []).map((p: any) => ({
+    ...p,
+    klanten: Array.isArray(p.klanten) ? (p.klanten[0] ?? null) : p.klanten,
+  }))
+
   return (
     <ProjectenClient
-      projecten={projecten ?? []}
+      projecten={projectenGenormaliseerd}
       klanten={klanten ?? []}
     />
   )

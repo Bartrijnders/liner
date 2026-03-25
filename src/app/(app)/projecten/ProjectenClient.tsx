@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import ProjectModal from '@/components/ProjectModal'
 
 type Klant = { id: string; naam: string }
@@ -15,7 +14,7 @@ type Project = {
   show_begindatum: string | null
   show_einddatum: string | null
   klant_id: string | null
-  klanten: { naam: string }[] | null
+  klanten: { naam: string } | null
 }
 
 export default function ProjectenClient({
@@ -35,50 +34,127 @@ export default function ProjectenClient({
 
   return (
     <div>
-      <div className="flex items-end justify-between mb-8">
-        <div>
-          <p className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-1">
-            Overzicht
+      {/* Header */}
+      <header className="flex justify-between items-end mb-12">
+        <div className="space-y-1">
+          <h1
+            className="text-4xl font-extrabold tracking-tight"
+            style={{ color: '#1c1c1a', fontFamily: 'var(--font-manrope)' }}
+          >
+            Projecten
+          </h1>
+          <p className="font-medium" style={{ color: '#42474d' }}>
+            Beheer en overzicht van lopende projecten.
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Projecten</h1>
         </div>
-        <Button onClick={() => setModalOpen(true)}>Nieuw project</Button>
-      </div>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="btn-primary"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+          Nieuw project
+        </button>
+      </header>
 
+      {/* Tabel */}
       {projecten.length === 0 ? (
-        <p className="text-muted-foreground text-sm">Nog geen projecten aangemaakt.</p>
+        <div
+          className="rounded-2xl p-12 text-center"
+          style={{ backgroundColor: '#ffffff' }}
+        >
+          <p style={{ color: '#42474d' }}>Nog geen projecten aangemaakt.</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projecten.map((project) => (
-            <Link
-              key={project.id}
-              href={`/projecten/${project.id}`}
-              className="group block border border-border/60 rounded-md p-5 hover:border-primary/40 hover:bg-muted/30 transition-all"
-            >
-              <p className="font-semibold group-hover:text-primary transition-colors truncate">
-                {project.naam}
-              </p>
-              {project.klanten?.[0]?.naam && (
-                <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                  {project.klanten[0].naam}
-                </p>
-              )}
-              <div className="mt-4 pt-4 border-t border-border/40 grid grid-cols-2 gap-y-2 text-xs">
-                <div>
-                  <p className="uppercase tracking-wide text-muted-foreground font-medium">PM</p>
-                  <p className="mt-0.5 truncate">{project.project_manager ?? '—'}</p>
-                </div>
-                <div>
-                  <p className="uppercase tracking-wide text-muted-foreground font-medium">Show</p>
-                  <p className="mt-0.5 truncate">
-                    {project.show_begindatum
-                      ? new Date(project.show_begindatum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
-                      : '—'}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#ffffff' }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr style={{ backgroundColor: 'rgba(246, 243, 241, 0.5)' }}>
+                  {['Naam', 'Project manager', 'Klant', 'Show begindatum', 'Show einddatum', ''].map((h) => (
+                    <th
+                      key={h}
+                      className="px-8 py-5 text-xs font-bold uppercase tracking-wider"
+                      style={{ color: 'rgba(66, 71, 77, 0.8)', fontFamily: 'var(--font-manrope)' }}
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {projecten.map((project) => (
+                  <tr
+                    key={project.id}
+                    className="group cursor-pointer transition-colors"
+                    style={{ borderTop: '1px solid #f6f3f1' }}
+                    onClick={() => router.push(`/projecten/${project.id}`)}
+                  >
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: '#d6e3dd' }}
+                        >
+                          <span
+                            className="material-symbols-outlined"
+                            style={{ color: '#596561', fontSize: '20px' }}
+                          >
+                            folder_open
+                          </span>
+                        </div>
+                        <span
+                          className="font-bold text-lg"
+                          style={{ color: '#1c1c1a', fontFamily: 'var(--font-manrope)' }}
+                        >
+                          {project.naam}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 font-medium" style={{ color: '#1c1c1a' }}>
+                      {project.project_manager ?? '—'}
+                    </td>
+                    <td className="px-8 py-6 font-medium" style={{ color: '#42474d' }}>
+                      {project.klanten?.naam ?? '—'}
+                    </td>
+                    <td className="px-8 py-6 text-center" style={{ color: '#42474d' }}>
+                      {project.show_begindatum
+                        ? new Date(project.show_begindatum).toLocaleDateString('nl-NL', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })
+                        : '—'}
+                    </td>
+                    <td className="px-8 py-6 text-center" style={{ color: '#42474d' }}>
+                      {project.show_einddatum
+                        ? new Date(project.show_einddatum).toLocaleDateString('nl-NL', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })
+                        : '—'}
+                    </td>
+                    <td className="px-8 py-6 text-right">
+                      <span
+                        className="material-symbols-outlined transition-colors"
+                        style={{ color: '#72787e', fontSize: '20px' }}
+                      >
+                        chevron_right
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div
+            className="px-8 py-4 flex justify-between items-center"
+            style={{ backgroundColor: 'rgba(246, 243, 241, 0.3)' }}
+          >
+            <p className="text-sm" style={{ color: '#42474d' }}>
+              {projecten.length} project{projecten.length !== 1 ? 'en' : ''}
+            </p>
+          </div>
         </div>
       )}
 

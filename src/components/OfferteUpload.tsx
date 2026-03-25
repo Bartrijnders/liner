@@ -23,7 +23,6 @@ export default function OfferteUpload({ projectId }: { projectId: string }) {
           const uuid = crypto.randomUUID()
           const path = `projecten/${projectId}/${uuid}-${file.name}`
 
-          // 1. Upload naar Supabase Storage
           const { error: storageError } = await supabase.storage
             .from('offertes')
             .upload(path, file)
@@ -33,7 +32,6 @@ export default function OfferteUpload({ projectId }: { projectId: string }) {
             return
           }
 
-          // 2. Rij aanmaken in offertes tabel
           const { data: offerte, error: dbError } = await supabase
             .from('offertes')
             .insert({
@@ -50,7 +48,6 @@ export default function OfferteUpload({ projectId }: { projectId: string }) {
             return
           }
 
-          // 3. AI extractie starten — fire-and-forget
           fetch(`/api/offertes/${offerte.id}/verwerk`, { method: 'POST' })
         })
       )
@@ -71,30 +68,40 @@ export default function OfferteUpload({ projectId }: { projectId: string }) {
     <div className="space-y-3">
       <div
         {...getRootProps()}
-        className={`
-          border-2 border-dashed rounded-md px-8 py-12 text-center cursor-pointer transition-colors
-          ${isDragActive
-            ? 'border-primary bg-primary/5 text-primary'
-            : 'border-border/60 text-muted-foreground hover:border-primary/40 hover:text-foreground'
-          }
-          ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
-        `}
+        className={`rounded-xl px-8 py-10 text-center cursor-pointer transition-all ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        style={{
+          border: `2px dashed ${isDragActive ? '#1e293b' : '#e2e8f0'}`,
+          backgroundColor: isDragActive ? '#f8fafc' : '#ffffff',
+        }}
       >
         <input {...getInputProps()} />
-        <p className="text-sm font-medium">
-          {uploading
-            ? 'Bezig met uploaden...'
-            : isDragActive
-            ? 'Laat los om te uploaden'
-            : 'Sleep PDF-bestanden hierheen'}
-        </p>
-        <p className="text-xs mt-1 opacity-70">
-          {uploading ? '' : 'of klik om te bladeren — meerdere bestanden tegelijk mogelijk'}
-        </p>
+        <div className="flex flex-col items-center gap-2">
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize: '32px', color: isDragActive ? '#1e293b' : '#94a3b8' }}
+          >
+            upload_file
+          </span>
+          <p
+            className="text-sm font-semibold"
+            style={{ color: isDragActive ? '#1e293b' : '#64748b' }}
+          >
+            {uploading
+              ? 'Bezig met uploaden...'
+              : isDragActive
+              ? 'Laat los om te uploaden'
+              : 'Sleep PDF-bestanden hierheen'}
+          </p>
+          {!uploading && (
+            <p className="text-xs" style={{ color: '#72787e' }}>
+              of klik om te bladeren — meerdere bestanden tegelijk mogelijk
+            </p>
+          )}
+        </div>
       </div>
 
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p className="text-sm" style={{ color: '#ba1a1a' }}>{error}</p>
       )}
     </div>
   )

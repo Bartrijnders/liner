@@ -1132,3 +1132,405 @@ Eenvoudige beheerpagina voor de catalogus. Geen complexe features in Phase 2.
 ---
 
 *Phase 2 — Liner @ The Doc — Maart 2026*
+
+---
+
+# Liner — Claude Code Build Plan (Phase 3)
+
+> Lees CLAUDE.md (Phase 1+2 context) volledig door voordat je dit leest.
+> Phase 3 voegt toe: calculatie UI per project + Excel export naar het bestaande template.
+> Alle architectuurkeuzes zijn intentioneel.
+
+---
+
+## Wat we bouwen in Phase 3
+
+De kern: na het valideren van offertes (Phase 2) wil de gebruiker zien wat het project kost
+en wat de verkoopprijs wordt. Dit gebeurt in een calculatiescherm in Liner, 
+met een export naar het bestaande Excel calculatietemplate.
+
+1. **Fee instelling** per project (standaard 1.30 = 30% marge)
+2. **Calculatie UI** — per subgroup: inkoop, marge, verkoopprijs
+3. **Summary** — subtotaal, PM kosten, kortingen, eindtotaal
+4. **Excel export** — vult het bestaande template in en biedt download
+
+---
+
+## Hoe de calculatie werkt
+
+### Inkoop per subgroup
+
+De inkoopprijs per regel = `stukprijs × hoeveelheid` (uit de gevalideerde orderregels).
+Orderregels worden gegroepeerd op het gematchte `subgroup_element.subgroup`.
+
+```
+Subgroup "Furniture":
+  Barkruk LJ3    2 st × €122,82 = €245,64
+  Statafel CPH20 4 st × €121,80 = €487,20
+  Armstoel LJ1   8 st × €66,78  = €534,24
+  ─────────────────────────────────────────
+  Totaal inkoop:               €1.267,08
+```
+
+### Verkoopprijs formule
+
+Exact zoals in het Excel template:
+
+```
+Verkoopprijs = ROUNDUP((inkoop × fee) / 5, 0) × 5
+```
+
+Waarbij `fee` configureerbaar is per project (standaard 1.30).
+
+Dit rondt altijd af naar boven op het dichtstbijzijnde veelvoud van 5.
+
+### Voorbeeld
+
+```
+Inkoop:      €1.267,08
+Fee:         1.30
+× fee:       €1.647,20
+÷ 5:         329,44
+ROUNDUP:     330
+× 5:         €1.650,00  ← verkoopprijs
+Marge:       €1.650,00 - €1.267,08 = €382,92
+```
+
+### Mapping Liner subgroups → Calc sheet categorieën
+
+| Liner subgroup         | Calc sheet categorie |
+|------------------------|----------------------|
+| Flooring               | Floor                |
+| Walls and Doors        | Walls                |
+| Ceiling                | Rigging              |
+| Kitchen / Storage      | Pantry               |
+| Furniture              | Furniture            |
+| Audiovisual Equipment  | AV                   |
+| Interior               | Display              |
+| Decoration             | Decoration           |
+| Various                | Various              |
+| Electricity            | Electrical           |
+| General                | General costs        |
+| OSS                    | facilities           |
+
+---
+
+## Database Uitbreiding
+
+```sql
+-- Fee en calculatie-instellingen per project
+alter table projecten
+  add column if not exists fee numeric(4,2) default 1.30,
+  add column if not exists pm_kosten numeric(10,2) default 0,
+  add column if not exists korting_1 numeric(10,2) default 0,
+  add column if not exists korting_2 numeric(10,2) default 0,
+  add column if not exists av_kosten numeric(10,2) default 0,
+  add column if not exists opslag_kosten numeric(10,2) default 0;
+```
+
+Geen nieuwe tabellen nodig — de calculatie wordt berekend vanuit bestaande
+`orderregels` + `subgroup_elements` + `subgroups` data.
+
+---
+
+## Mappenstructuur (aanvulling)
+
+```text
+src/
+├── app/
+│   └── (app)/
+│       └── projecten/
+│           └── [id]/
+│               └── calculatie/
+│                   └── page.tsx          ← Calculatie UI
+├── api/
+│   └── projecten/
+│       └── [id]/
+│           ├── calculatie/
+│           │   └── route.ts              ← GET calculatiedata
+│           └── export/
+│               └── route.ts              ← GET Excel download
+├── lib/
+│   └── calculatie/
+│       ├── bereken.ts                    ← bereken verkoopprijs, marge
+│       └── excel-export.ts              ← vul Excel template in
+```
+
+---
+
+## Calculatie Logica (`lib/calculatie/bereken.ts`)
+
+```typescript
+export function berekenVerkoopprijs(inkoop: number, fee: number): number {
+  // Exact de Excel formule: ROUNDUP((inkoop * fee / 5), 0) * 5
+  return Math.ceil((inkoop * fee) / 5) * 5
+}
+
+export function berekenMarge(inkoop: number, verkoopprijs: number): number {
+  return verkoopprijs - inkoop
+}
+
+export function berekenMargePercentage(inkoop: number, verkoopprijs: number): number {
+  if (verkoopprijs === 0) return 0
+  return ((verkoopprijs - inkoop) / verkoopprijs) * 100
+}
+
+export interface SubgroupCalculatie {
+  subgroupId: string
+  subgroupNaam: string
+  regels: {
+    orderegelId: string
+    omschrijving: string
+    hoeveelheid: number | null
+    stukprijs: number | null
+    inkoop: number        // hoeveelheid × stukprijs
+  }[]
+  totaalInkoop: number
+  verkoopprijs: number
+  marge: number
+}
+
+export interface ProjectCalculatie {
+  fee: number
+  subgroups: SubgroupCalculatie[]
+  subtotaalInkoop: number
+  subtotaalVerkoop: number
+  pmKosten: number
+  kortingen: number
+  avKosten: number
+  opslagKosten: number
+  eindtotaalInkoop: number
+  eindtotaalVerkoop: number
+  totaalMarge: number
+  margePercentage: number
+}
+```
+
+---
+
+## API Route (`api/projecten/[id]/calculatie/route.ts`)
+
+De GET route haalt alle gevalideerde orderregels op voor het project,
+groepeert ze per subgroup, en berekent de calculatie.
+
+```typescript
+// Stappen:
+// 1. Haal project op (inclusief fee instelling)
+// 2. Haal alle offertes op voor dit project
+// 3. Haal alle orderregels op die:
+//    - een subgroup_element_id hebben (gematcht)
+//    - een stukprijs hebben
+//    - hoeveelheid hebben
+// 4. Groepeer op subgroup
+// 5. Bereken per subgroup: inkoop, verkoopprijs, marge
+// 6. Bereken totalen + summary
+// 7. Geef terug als JSON
+
+// Belangrijk: gebruik alleen GEVALIDEERDE regels
+// (validated_at IS NOT NULL OR confidence = 'HIGH')
+```
+
+---
+
+## Calculatie UI (`calculatie/page.tsx`)
+
+### Layout
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ← Terug naar project    Demo 27 — Calculatie        [Exporteren]│
+├────────────────────────────────────┬────────────────────────────┤
+│ Fee factor: [1.30 ▼]               │ Subtotaal inkoop: €12.450  │
+│                                    │ Subtotaal verkoop: €16.250 │
+│                                    │ Marge: €3.800 (23,4%)      │
+├────────────────────────────────────┴────────────────────────────┤
+│ FURNITURE                                                        │
+│ ┌──────────────────────────┬──────────┬──────────┬────────────┐ │
+│ │ Omschrijving             │ Hoev.    │ Stukprijs│ Inkoop     │ │
+│ │ Barkruk LJ3 lichtgrijs   │ 2 st     │ €122,82  │ €245,64    │ │
+│ │ Statafel CPH20           │ 4 st     │ €121,80  │ €487,20    │ │
+│ │ Armstoel LJ1             │ 8 st     │ €66,78   │ €534,24    │ │
+│ ├──────────────────────────┴──────────┴──────────┼────────────┤ │
+│ │                              Totaal inkoop:    │ €1.267,08  │ │
+│ │                              Verkoopprijs:     │ €1.650,00  │ │
+│ │                              Marge:            │ €382,92    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│ [volgende subgroup...]                                           │
+│                                                                  │
+│ ─── SUMMARY ──────────────────────────────────────────────────  │
+│ Stand totaal inkoop:              €10.234,00                     │
+│ Stand totaal verkoop:             €13.300,00                     │
+│ PM kosten: [€ ______]                                            │
+│ Korting 1: [€ ______]                                            │
+│ Korting 2: [€ ______]                                            │
+│ AV kosten: [€ ______]                                            │
+│ Opslag kosten: [€ ______]                                        │
+│ ───────────────────────────────────────                          │
+│ Eindtotaal verkoop:               €14.850,00                     │
+│ Totale marge:                     €4.616,00 (31,1%)              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Gedrag
+
+- **Fee factor** is bewerkbaar — bij wijziging herberekent de hele pagina live
+- **PM kosten, kortingen, AV, opslag** zijn handmatig invulbaar en worden opgeslagen
+- Wijzigingen worden direct via PATCH naar `/api/projecten/[id]` gestuurd
+- **Exporteren** knop bovenaan — download Excel bij klik
+
+### Link toevoegen
+
+Voeg op de project detail pagina een knop toe:
+`[Bekijk calculatie]` → navigeert naar `/projecten/[id]/calculatie`
+Toon alleen als er minstens één offerte met status 'done' is.
+
+---
+
+## Excel Export (`lib/calculatie/excel-export.ts`)
+
+Gebruik `exceljs` (niet `xlsx`) — die ondersteunt formulas en formatting bewaren.
+
+```bash
+npm install exceljs
+```
+
+### Strategie
+
+Kopieer het template bestand (opgeslagen in `public/templates/calc-template.xlsx`)
+en vul de relevante cellen in. Bewaar alle bestaande formules — schrijf alleen
+de inkoopwaarden in de data-cellen.
+
+```typescript
+import ExcelJS from 'exceljs'
+
+export async function genereerExcel(calc: ProjectCalculatie, project: Project): Promise<Buffer> {
+  const workbook = new ExcelJS.Workbook()
+  
+  // Laad het template
+  await workbook.xlsx.readFile('public/templates/calc-template.xlsx')
+  
+  // Vul Budget show 1 in
+  const budgetSheet = workbook.getWorksheet('Budget show 1')
+  budgetSheet.getCell('E4').value = project.naam           // Client/show naam
+  budgetSheet.getCell('E5').value = project.show_naam      // Show naam
+  budgetSheet.getCell('E10').value = project.m2 ?? 0       // m²
+  budgetSheet.getCell('E14').value = project.project_manager
+  
+  // Fee instellen in Calc 1
+  const calcSheet = workbook.getWorksheet('Calc 1')
+  calcSheet.getCell('E1').value = calc.fee  // fee cel bovenaan sheet
+  
+  // Vul inkoop per categorie in op de juiste rijen
+  // (zie mapping tabel hierboven + rijnummers uit het template)
+  for (const subgroup of calc.subgroups) {
+    const rijen = getCategoryRijen(subgroup.subgroupNaam, calcSheet)
+    vulRegelIn(calcSheet, rijen, subgroup.regels)
+  }
+  
+  const buffer = await workbook.xlsx.writeBuffer()
+  return Buffer.from(buffer)
+}
+```
+
+### Celnummers per categorie in Calc sheet
+
+Gebaseerd op analyse van het template:
+
+| Categorie    | Startrij data | Eindleeg rij |
+|--------------|---------------|--------------|
+| Floor        | 15            | 24           |
+| Walls        | 29            | 41           |
+| Rigging      | 45            | 51           |
+| Pantry       | 53            | 68           |
+| Furniture    | 72            | 85           |
+| AV           | 89            | 96           |
+| Display      | 98            | 108          |
+| Decoration   | 110           | 124          |
+| Various      | 126           | 134          |
+| Electrical   | 136           | 149          |
+| General      | 164           | 183          |
+| Facilities   | 191           | 198          |
+
+Per rij schrijven: `col A` = hoeveelheid, `col D` = inkoop totaal voor die regel.
+De formules in col E (marge) en F (verkoop) berekenen automatisch.
+
+### API Route voor download
+
+```typescript
+// GET /api/projecten/[id]/export
+// Genereert Excel en stuurt terug als download
+
+export async function GET(req: Request, { params }) {
+  // 1. Haal calculatiedata op
+  // 2. Genereer Excel buffer
+  // 3. Stuur terug met juiste headers:
+  
+  return new Response(buffer, {
+    headers: {
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="Calculatie-${project.naam}.xlsx"`,
+    }
+  })
+}
+```
+
+---
+
+## Bouwvolgorde Phase 3
+
+- [ ] **Stap 1** — Database uitbreiden
+  - `fee`, `pm_kosten`, `korting_1`, `korting_2`, `av_kosten`, `opslag_kosten` toevoegen aan `projecten`
+
+- [ ] **Stap 2** — Calculatie logica
+  - `lib/calculatie/bereken.ts` — pure functies, geen dependencies
+  - Schrijf unit tests: `berekenVerkoopprijs(1267.08, 1.30)` → `1650`
+
+- [ ] **Stap 3** — Calculatie API route
+  - `GET /api/projecten/[id]/calculatie`
+  - Groepeert orderregels per subgroup, berekent alles
+
+- [ ] **Stap 4** — Calculatie UI
+  - `/projecten/[id]/calculatie/page.tsx`
+  - Fee factor aanpasbaar, live herberekening
+  - Handmatige invoervelden voor PM, kortingen, AV, opslag
+  - Link toevoegen op project detail pagina
+
+- [ ] **Stap 5** — Excel template instellen
+  - Kopieer `Final-NEW-calc-client-program_yr-Builder-v01-initials.xlsx`
+    naar `public/templates/calc-template.xlsx`
+  - Verwijder de testdata maar bewaar alle formules
+
+- [ ] **Stap 6** — Excel export
+  - `npm install exceljs`
+  - `lib/calculatie/excel-export.ts`
+  - `GET /api/projecten/[id]/export`
+  - "Exporteren" knop in de calculatie UI
+
+---
+
+## Implementatieregels Phase 3
+
+1. **Alleen gevalideerde regels**: gebruik alleen orderregels met `validated_at IS NOT NULL` 
+   of `confidence = 'HIGH'` in de calculatie.
+2. **Inkoop = stukprijs × hoeveelheid**: als één van beide null is, sla de regel over 
+   en toon een waarschuwing in de UI.
+3. **Fee bewaren**: sla de fee op in de `projecten` tabel zodat hij persistent is.
+4. **Template nooit overschrijven**: altijd kopiëren en invullen, nooit het origineel aanpassen.
+5. **ExcelJS, niet xlsx**: xlsx library ondersteunt geen formulas bewaren bij lezen+schrijven.
+6. **Herbereken client-side**: fee wijzigingen herberekenen in de browser, 
+   niet elke keer een nieuwe API call.
+
+---
+
+## Wat valt BUITEN Phase 3
+
+- Budget sheet (meerdere shows) — vereenvoudigd tot één show per project
+- Nacalculatie sheet — voor later
+- Rapportage sheet — voor later
+- Scanned PDF support — voor later
+- Gebruikersbeheer / rollen — voor later
+
+---
+
+*Phase 3 — Liner @ The Doc — Maart 2026*

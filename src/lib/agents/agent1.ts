@@ -35,7 +35,7 @@ Elk object in de array heeft deze velden:
 - eenheid: string | null (m, st, m², stuk, etc. — extraheer uit hoeveelheid als mogelijk)
 - stukprijs: string | null (prijs per eenheid, inclusief valutasymbool)
 - totaalprijs: string | null (totaalprijs voor de regel)
-- cleanDesc: string (genormaliseerde omschrijving: lowercase, verwijder artikelnummers/codes, behoud producttype en materiaal)
+- cleanDesc: string (genormaliseerde omschrijving: lowercase, behoud productnaam, modelnummer/typenaam, kleur en materiaal volledig — verwijder ALLEEN losse leveranciers-SKU's of interne bestelnummers die geen deel zijn van de productnaam, zoals "ART-12345" of "REF: 9980-A")
 - cleanDetails: string | null (genormaliseerde details, of null als geen details)
 - categoryHint: string | null (beste schatting van de productcategorie, bijv. "Bekabeling", "Bevestiging", "Verlichting" — of null als onduidelijk)
 

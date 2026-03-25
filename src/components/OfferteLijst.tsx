@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Trash2, Loader2 } from 'lucide-react'
+import { Loader2, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import OrderregelsTable from '@/components/OrderregelsTable'
 
@@ -25,12 +24,11 @@ export default function OfferteLijst({
 }) {
   const [offertes, setOffertes] = useState<Offerte[]>(initialOffertes)
   const [openRegelId, setOpenRegelId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  // Sync met server wanneer router.refresh() nieuwe props stuurt (na upload)
   useEffect(() => {
     setOffertes(initialOffertes)
   }, [initialOffertes])
-  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   async function handleDelete(offerte: Offerte) {
     if (!confirm(`"${offerte.bestandsnaam}" verwijderen?`)) return
@@ -43,7 +41,6 @@ export default function OfferteLijst({
     setDeletingId(null)
   }
 
-  // Poll elke 3s zolang er offertes in 'uploaded' of 'processing' zijn
   useEffect(() => {
     const hasActive = offertes.some((o) => o.status === 'processing' || o.status === 'uploaded')
     if (!hasActive) return
@@ -55,7 +52,6 @@ export default function OfferteLijst({
         .select('id, bestandsnaam, status, fout_melding, storage_path, created_at')
         .eq('project_id', projectId)
         .order('created_at', { ascending: false })
-
       if (data) setOffertes(data)
     }, 3000)
 
@@ -65,28 +61,32 @@ export default function OfferteLijst({
   if (offertes.length === 0) return null
 
   return (
-    <div className="mt-6 space-y-2">
+    <div className="mt-4 space-y-2">
       {offertes.map((offerte) => (
-        <div key={offerte.id} className="space-y-1">
-          <div className="border border-border/60 rounded-md px-5 py-3.5 text-sm">
+        <div key={offerte.id}>
+          <div className="bg-white rounded-xl px-5 py-3.5 border border-slate-200">
             <div className="flex items-center justify-between gap-4">
-              <span className="font-medium truncate">{offerte.bestandsnaam}</span>
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="material-symbols-outlined text-slate-400 shrink-0" style={{ fontSize: '18px' }}>
+                  description
+                </span>
+                <span className="font-medium text-slate-900 truncate text-sm">
+                  {offerte.bestandsnaam}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
                 {offerte.status === 'done' && (
                   <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 text-xs"
-                      onClick={() =>
-                        setOpenRegelId(openRegelId === offerte.id ? null : offerte.id)
-                      }
+                    <button
+                      onClick={() => setOpenRegelId(openRegelId === offerte.id ? null : offerte.id)}
+                      className="btn-secondary btn-sm"
                     >
                       {openRegelId === offerte.id ? 'Verberg regels' : 'Bekijk regels'}
-                    </Button>
+                    </button>
                     <Link
                       href={`/projecten/${projectId}/offertes/${offerte.id}`}
-                      className="inline-flex items-center h-7 rounded-md border border-input px-2.5 text-xs font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                      className="btn-primary btn-sm"
                     >
                       Valideer regels
                     </Link>
@@ -96,21 +96,23 @@ export default function OfferteLijst({
                 <button
                   onClick={() => handleDelete(offerte)}
                   disabled={deletingId === offerte.id}
-                  className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-40"
+                  className="text-slate-400 hover:text-red-500 transition-colors disabled:opacity-40 p-1"
                   title="Verwijderen"
                 >
-                  <Trash2 className="size-3.5" />
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>
+
+            {offerte.status === 'error' && offerte.fout_melding && (
+              <p className="text-xs text-red-600 mt-2">{offerte.fout_melding}</p>
+            )}
           </div>
 
-          {offerte.status === 'error' && offerte.fout_melding && (
-            <p className="text-xs text-destructive px-1">{offerte.fout_melding}</p>
-          )}
-
           {openRegelId === offerte.id && (
-            <OrderregelsTable offerteId={offerte.id} />
+            <div className="mt-2">
+              <OrderregelsTable offerteId={offerte.id} />
+            </div>
           )}
         </div>
       ))}
@@ -121,17 +123,16 @@ export default function OfferteLijst({
 function StatusBadge({ status }: { status: string }) {
   if (status === 'processing') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
-        <Loader2 className="size-3 animate-spin" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-amber-100 text-amber-700 px-2 py-1 rounded-md">
+        <Loader2 size={10} className="animate-spin" />
         Verwerken…
       </span>
     )
   }
-
-  const styles: Record<string, string> = {
-    uploaded: 'bg-muted text-muted-foreground',
-    done: 'bg-green-100 text-green-800',
-    error: 'bg-red-100 text-red-800',
+  const config: Record<string, string> = {
+    uploaded: 'bg-slate-100 text-slate-500',
+    done: 'bg-green-100 text-green-700',
+    error: 'bg-red-100 text-red-600',
   }
   const labels: Record<string, string> = {
     uploaded: 'Geüpload',
@@ -139,7 +140,7 @@ function StatusBadge({ status }: { status: string }) {
     error: 'Fout',
   }
   return (
-    <span className={`text-xs font-medium px-2 py-0.5 rounded ${styles[status] ?? styles.uploaded}`}>
+    <span className={`text-xs font-medium px-2 py-1 rounded-md ${config[status] ?? config.uploaded}`}>
       {labels[status] ?? status}
     </span>
   )
