@@ -74,57 +74,49 @@ function applyTransforms(xml, transforms) {
   return result
 }
 
-/** OOXML for a detail table with category + regel loops (docxtemplater syntax). */
+/** OOXML for a detail table with category + regel loops (docxtemplater syntax).
+ *  Layout based on Hoynck PDF offer format:
+ *  - 3 columns: omschrijving (wide, left) | EUR (narrow, right) | prijs (narrow, right)
+ *  - Subgroep header row: naam bold left, categorie_totaal bold right
+ *  - Per regel: [hoeveelheid] x [omschrijving] | EUR | verkoopprijs
+ *  - Closing total row per subgroup: bold + underline
+ *  Marker rows ({#categorieen}, {/categorieen}) are dropped by docxtemplater.
+ */
 const DETAIL_TABLE_XML = `<w:tbl>
 <w:tblPr>
   <w:tblW w:w="8618" w:type="dxa"/>
   <w:tblBorders>
-    <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-    <w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-    <w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-    <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-    <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+    <w:top w:val="none" w:sz="0" w:space="0" w:color="auto"/>
+    <w:left w:val="none" w:sz="0" w:space="0" w:color="auto"/>
+    <w:bottom w:val="none" w:sz="0" w:space="0" w:color="auto"/>
+    <w:right w:val="none" w:sz="0" w:space="0" w:color="auto"/>
+    <w:insideH w:val="none" w:sz="0" w:space="0" w:color="auto"/>
+    <w:insideV w:val="none" w:sz="0" w:space="0" w:color="auto"/>
   </w:tblBorders>
+  <w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/></w:tblCellMar>
 </w:tblPr>
 <w:tblGrid>
-  <w:gridCol w:w="4500"/>
-  <w:gridCol w:w="1200"/>
-  <w:gridCol w:w="1200"/>
-  <w:gridCol w:w="1718"/>
+  <w:gridCol w:w="6500"/>
+  <w:gridCol w:w="700"/>
+  <w:gridCol w:w="1418"/>
 </w:tblGrid>
+<w:tr><w:tc><w:p><w:r><w:t>{{#categorieen}}</w:t></w:r></w:p></w:tc><w:tc><w:p/></w:tc><w:tc><w:p/></w:tc></w:tr>
 <w:tr>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="1F3864"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="18"/></w:rPr><w:t>Omschrijving</w:t></w:r></w:p></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="1F3864"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="18"/></w:rPr><w:t>Hoev.</w:t></w:r></w:p></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="1F3864"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="18"/></w:rPr><w:t>Eenh.</w:t></w:r></w:p></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="1F3864"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="18"/></w:rPr><w:t>Verkoopprijs</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:r><w:rPr><w:b/></w:rPr><w:t xml:space="preserve">{{naam}}</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>EUR</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t xml:space="preserve">{{categorie_totaal}}</w:t></w:r></w:p></w:tc>
 </w:tr>
 <w:tr>
-  <w:tc><w:p><w:r><w:t>{#categorieen}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:p/></w:tc><w:tc><w:p/></w:tc><w:tc><w:p/></w:tc>
+  <w:tc><w:p><w:r><w:t xml:space="preserve">{{#regels}}{{hoeveelheid}} x {{omschrijving}}</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:t>EUR</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:t xml:space="preserve">{{verkoopprijs}}{{/regels}}</w:t></w:r></w:p></w:tc>
 </w:tr>
 <w:tr>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="D6E0EF"/></w:tcPr><w:p><w:r><w:rPr><w:b/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{{naam}}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="D6E0EF"/></w:tcPr><w:p/></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="D6E0EF"/></w:tcPr><w:p/></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="D6E0EF"/></w:tcPr><w:p/></w:tc>
+  <w:tc><w:p><w:r><w:rPr><w:b/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">Totaal {{naam}}</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/><w:u w:val="single"/></w:rPr><w:t>EUR</w:t></w:r></w:p></w:tc>
+  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/><w:u w:val="single"/></w:rPr><w:t xml:space="preserve">{{categorie_totaal}}</w:t></w:r></w:p></w:tc>
 </w:tr>
-<w:tr>
-  <w:tc><w:p><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{#regels}{{omschrijving}}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{{hoeveelheid}}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{{eenheid}}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{{verkoopprijs}}{/regels}</w:t></w:r></w:p></w:tc>
-</w:tr>
-<w:tr>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="EBF0F8"/></w:tcPr><w:p><w:r><w:rPr><w:b/><w:sz w:val="18"/></w:rPr><w:t>Subtotaal categorie</w:t></w:r></w:p></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="EBF0F8"/></w:tcPr><w:p/></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="EBF0F8"/></w:tcPr><w:p/></w:tc>
-  <w:tc><w:tcPr><w:shd w:val="clear" w:color="auto" w:fill="EBF0F8"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">{{categorie_totaal}}</w:t></w:r></w:p></w:tc>
-</w:tr>
-<w:tr>
-  <w:tc><w:p><w:r><w:t>{/categorieen}</w:t></w:r></w:p></w:tc>
-  <w:tc><w:p/></w:tc><w:tc><w:p/></w:tc><w:tc><w:p/></w:tc>
-</w:tr>
+<w:tr><w:tc><w:p><w:r><w:t>{{/categorieen}}</w:t></w:r></w:p></w:tc><w:tc><w:p/></w:tc><w:tc><w:p/></w:tc></w:tr>
 </w:tbl>`
 
 /** Process a single template file. */
