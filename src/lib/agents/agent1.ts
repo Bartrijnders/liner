@@ -16,7 +16,7 @@ export interface Agent1Resultaat {
 }
 
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
-  const response = await client.messages.create({
+  const stream = client.messages.stream({
     model: 'claude-sonnet-4-6',
     max_tokens: 64000,
     messages: [
@@ -50,6 +50,7 @@ Geef nu de JSON array:`,
       },
     ],
   })
+  const response = await stream.finalMessage()
 
   const content = response.content[0]
   if (content.type !== 'text') throw new Error('Onverwacht antwoord van Agent 1')
