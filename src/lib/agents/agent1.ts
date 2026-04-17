@@ -15,10 +15,14 @@ export interface Agent1Resultaat {
   categoryHint: string | null
 }
 
-export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
+// Haiku max output = 8192 tokens ≈ 100 items per chunk.
+// 15k chars input → ~50-80 items → ~10-15s per chunk → stays within Vercel's 60s limit.
+const CHUNK_SIZE = 15_000
+
+async function verwerkChunk(tekst: string, regelOffset: number): Promise<Agent1Resultaat[]> {
   const stream = client.messages.stream({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 64000,
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 8192,
     messages: [
       {
         role: 'user',
@@ -28,7 +32,7 @@ Analyseer de onderstaande offerte tekst en extraheer alle orderregels.
 Geef je antwoord ALLEEN als een geldig JSON array, zonder uitleg, zonder markdown code blocks.
 
 Elk object in de array heeft deze velden:
-- regelnummer: number (volgorde in de offerte, begin bij 1)
+- regelnummer: number (volgorde in de offerte, begin bij ${regelOffset + 1})
 - omschrijving: string (de productnaam/omschrijving, zo letterlijk mogelijk)
 - details: string | null (aanvullende specificaties, afmetingen, etc.)
 - hoeveelheid: string | null (ruwe hoeveelheid zoals "2", "10 stuks", "50m")
@@ -43,30 +47,53 @@ Regels om te negeren: kopteksten, tussentitels, subtotalen, BTW-regels, en lege 
 
 Offerte tekst:
 ---
-${pdfTekst}
+${tekst}
 ---
 
 Geef nu de JSON array:`,
       },
     ],
   })
-  const response = await stream.finalMessage()
 
+  const response = await stream.finalMessage()
   const content = response.content[0]
   if (content.type !== 'text') throw new Error('Onverwacht antwoord van Agent 1')
 
   const raw = content.text
-  console.log('[agent1] stop_reason:', response.stop_reason)
-  console.log('[agent1] response lengte:', raw.length, 'tekens')
-  console.log('[agent1] response begin:', raw.slice(0, 300))
+  console.log(`[agent1] chunk offset=${regelOffset} stop_reason=${response.stop_reason} lengte=${raw.length}`)
 
   const start = raw.indexOf('[')
   const end = raw.lastIndexOf(']')
   if (start === -1 || end === -1 || end <= start) {
     throw new Error(
-      `Geen geldige JSON array in het antwoord van Agent 1. ` +
-      `stop_reason=${response.stop_reason} response_begin=${raw.slice(0, 300)}`
+      `Geen geldige JSON array (chunk offset ${regelOffset}). ` +
+      `stop_reason=${response.stop_reason} begin=${raw.slice(0, 200)}`
     )
   }
   return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
+}
+
+export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
+  const chunks: string[] = []
+  let pos = 0
+  while (pos < pdfTekst.length) {
+    let end = pos + CHUNK_SIZE
+    if (end < pdfTekst.length) {
+      const nl = pdfTekst.lastIndexOf('\n', end)
+      if (nl > pos) end = nl
+    }
+    chunks.push(pdfTekst.slice(pos, end))
+    pos = end
+  }
+
+  console.log(`[agent1] verwerking in ${chunks.length} chunk(s), totaal ${pdfTekst.length} tekens`)
+
+  const alleRegels: Agent1Resultaat[] = []
+  for (const chunk of chunks) {
+    const regels = await verwerkChunk(chunk, alleRegels.length)
+    alleRegels.push(...regels)
+  }
+
+  alleRegels.forEach((r, i) => { r.regelnummer = i + 1 })
+  return alleRegels
 }
