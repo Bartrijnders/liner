@@ -15,17 +15,10 @@ export interface Agent1Resultaat {
   categoryHint: string | null
 }
 
-// ~60 tokens per line item × 100 items = 6000 output tokens; cap input so output fits in 8192
-const MAX_PDF_CHARS = 60_000
-
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
-  const tekst = pdfTekst.length > MAX_PDF_CHARS
-    ? pdfTekst.slice(0, MAX_PDF_CHARS)
-    : pdfTekst
-
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 8192,
+    model: 'claude-sonnet-4-6',
+    max_tokens: 64000,
     messages: [
       {
         role: 'user',
@@ -50,7 +43,7 @@ Regels om te negeren: kopteksten, tussentitels, subtotalen, BTW-regels, en lege 
 
 Offerte tekst:
 ---
-${tekst}
+${pdfTekst}
 ---
 
 Geef nu de JSON array:`,
@@ -65,7 +58,10 @@ Geef nu de JSON array:`,
   const start = raw.indexOf('[')
   const end = raw.lastIndexOf(']')
   if (start === -1 || end === -1 || end <= start) {
-    throw new Error('Geen geldige JSON array in het antwoord van Agent 1')
+    throw new Error(
+      `Geen geldige JSON array in het antwoord van Agent 1. ` +
+      `Model response begint met: ${raw.slice(0, 200)}`
+    )
   }
   return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
 }
