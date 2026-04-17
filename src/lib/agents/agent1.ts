@@ -15,7 +15,14 @@ export interface Agent1Resultaat {
   categoryHint: string | null
 }
 
+// ~60 tokens per line item × 100 items = 6000 output tokens; cap input so output fits in 8192
+const MAX_PDF_CHARS = 60_000
+
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
+  const tekst = pdfTekst.length > MAX_PDF_CHARS
+    ? pdfTekst.slice(0, MAX_PDF_CHARS)
+    : pdfTekst
+
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 8192,
@@ -43,7 +50,7 @@ Regels om te negeren: kopteksten, tussentitels, subtotalen, BTW-regels, en lege 
 
 Offerte tekst:
 ---
-${pdfTekst}
+${tekst}
 ---
 
 Geef nu de JSON array:`,
