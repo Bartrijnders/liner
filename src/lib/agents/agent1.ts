@@ -55,12 +55,16 @@ Geef nu de JSON array:`,
   if (content.type !== 'text') throw new Error('Onverwacht antwoord van Agent 1')
 
   const raw = content.text
+  console.log('[agent1] stop_reason:', response.stop_reason)
+  console.log('[agent1] response lengte:', raw.length, 'tekens')
+  console.log('[agent1] response begin:', raw.slice(0, 300))
+
   const start = raw.indexOf('[')
   const end = raw.lastIndexOf(']')
   if (start === -1 || end === -1 || end <= start) {
     throw new Error(
       `Geen geldige JSON array in het antwoord van Agent 1. ` +
-      `Model response begint met: ${raw.slice(0, 200)}`
+      `stop_reason=${response.stop_reason} response_begin=${raw.slice(0, 300)}`
     )
   }
   return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
