@@ -18,7 +18,7 @@ export interface Agent1Resultaat {
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
   const response = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 4096,
+    max_tokens: 8192,
     messages: [
       {
         role: 'user',
@@ -54,10 +54,11 @@ Geef nu de JSON array:`,
   const content = response.content[0]
   if (content.type !== 'text') throw new Error('Onverwacht antwoord van Agent 1')
 
-  let jsonText = content.text.trim()
-  if (jsonText.startsWith('```')) {
-    jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
+  const raw = content.text
+  const start = raw.indexOf('[')
+  const end = raw.lastIndexOf(']')
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error('Geen geldige JSON array in het antwoord van Agent 1')
   }
-
-  return JSON.parse(jsonText) as Agent1Resultaat[]
+  return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
 }
