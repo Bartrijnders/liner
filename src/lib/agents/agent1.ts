@@ -15,9 +15,9 @@ export interface Agent1Resultaat {
   categoryHint: string | null
 }
 
-// Haiku max output = 8192 tokens ≈ 100 items per chunk.
-// 15k chars input → ~50-80 items → ~10-15s per chunk → stays within Vercel's 60s limit.
-const CHUNK_SIZE = 15_000
+// Haiku max output = 8192 tokens ≈ 50 items per chunk at ~150 tokens/item.
+// 8k chars input → ~30-50 items → fits in output limit and finishes in ~8-12s per chunk.
+const CHUNK_SIZE = 8_000
 
 async function verwerkChunk(tekst: string, regelOffset: number): Promise<Agent1Resultaat[]> {
   const stream = client.messages.stream({
@@ -63,14 +63,34 @@ Geef nu de JSON array:`,
   console.log(`[agent1] chunk offset=${regelOffset} stop_reason=${response.stop_reason} lengte=${raw.length}`)
 
   const start = raw.indexOf('[')
-  const end = raw.lastIndexOf(']')
-  if (start === -1 || end === -1 || end <= start) {
+  if (start === -1) {
     throw new Error(
-      `Geen geldige JSON array (chunk offset ${regelOffset}). ` +
+      `Geen JSON array gevonden (chunk offset ${regelOffset}). ` +
       `stop_reason=${response.stop_reason} begin=${raw.slice(0, 200)}`
     )
   }
-  return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
+
+  // Try complete array first
+  const end = raw.lastIndexOf(']')
+  if (end > start) {
+    return JSON.parse(raw.slice(start, end + 1)) as Agent1Resultaat[]
+  }
+
+  // Output was truncated (stop_reason=max_tokens) — recover completed objects
+  if (response.stop_reason === 'max_tokens') {
+    console.warn(`[agent1] output afgekapt bij chunk offset ${regelOffset}, gedeeltelijk herstel`)
+    const lastClose = raw.lastIndexOf('}')
+    if (lastClose > start) {
+      try {
+        return JSON.parse(raw.slice(start, lastClose + 1) + ']') as Agent1Resultaat[]
+      } catch { /* fall through */ }
+    }
+  }
+
+  throw new Error(
+    `Geen geldige JSON array (chunk offset ${regelOffset}). ` +
+    `stop_reason=${response.stop_reason} begin=${raw.slice(0, 200)}`
+  )
 }
 
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
