@@ -93,22 +93,17 @@ Geef nu de JSON array:`,
   )
 }
 
-// Overlap between chunks so items that span a boundary appear fully in the next chunk
-const OVERLAP = 800
-
 export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]> {
   const chunks: string[] = []
   let pos = 0
   while (pos < pdfTekst.length) {
     let end = pos + CHUNK_SIZE
     if (end < pdfTekst.length) {
-      // Snap to nearest newline so we don't cut mid-line
       const nl = pdfTekst.lastIndexOf('\n', end)
       if (nl > pos) end = nl
     }
     chunks.push(pdfTekst.slice(pos, end))
-    // Next chunk starts OVERLAP chars before the end so boundary items are repeated
-    pos = end - OVERLAP
+    pos = end
   }
 
   console.log(`[agent1] verwerking in ${chunks.length} chunk(s) parallel, totaal ${pdfTekst.length} tekens`)
@@ -117,20 +112,12 @@ export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]
     chunks.map((chunk, i) => verwerkChunk(chunk, i * 50))
   )
 
-  // Deduplicate: items near the overlap boundary appear in two consecutive chunks.
-  // Keep the first occurrence by omschrijving (lowercased).
-  const gezien = new Set<string>()
-  const alleRegels: Agent1Resultaat[] = []
-  for (const regels of chunkResultaten) {
-    for (const r of regels) {
-      const key = r.omschrijving.trim().toLowerCase()
-      if (!gezien.has(key)) {
-        gezien.add(key)
-        alleRegels.push(r)
-      }
-    }
-  }
+  // Log per-chunk counts to diagnose missing items
+  chunkResultaten.forEach((regels, i) =>
+    console.log(`[agent1] chunk ${i}: ${regels.length} regels`)
+  )
 
+  const alleRegels = chunkResultaten.flat()
   alleRegels.forEach((r, i) => { r.regelnummer = i + 1 })
   return alleRegels
 }
