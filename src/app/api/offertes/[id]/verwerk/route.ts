@@ -1,4 +1,4 @@
-export const maxDuration = 60
+export const maxDuration = 300
 export const runtime = 'nodejs'
 
 import { createServerClient } from '@supabase/ssr'
@@ -123,26 +123,13 @@ export async function POST(
       throw new Error('Geen orderregels gevonden in de offerte.')
     }
 
-    // 7. Per regel: matching pipeline
-    const regelInserts = []
-    const fuzzyScoreInserts: {
-      orderregel_id: string
-      match_term_id: string
-      score: number
-      term_coverage: number
-      input_coverage: number
-      avg_fuzzy: number
-      vector_distance: number | null
-    }[] = []
-
-    for (const regel of regels) {
+    // 7. Per regel: matching pipeline — verwerk alle regels parallel
+    const regelResultaten = await Promise.all(regels.map(async (regel) => {
       const cleanDesc = regel.cleanDesc || regel.omschrijving.toLowerCase()
+      const localFuzzyScores: { orderregel_id: string; match_term_id: string; score: number; term_coverage: number; input_coverage: number; avg_fuzzy: number; vector_distance: number | null }[] = []
 
-      // Vector search (alleen als OPENAI_API_KEY beschikbaar)
       const vectorKandidaten = await probeerVectorSearch(cleanDesc, serviceClient)
 
-      // Fuzzy scoring per kandidaat-matchterm
-      // Groepeer op SubgroupElement: bewaar hoogste score per element
       const elementScores = new Map<string, {
         score: number
         secondScore: number
@@ -173,9 +160,8 @@ export async function POST(
           existing.vectorDistance = kandidaat.vectorDistance
         }
 
-        // Bewaar voor fuzzy_scores tabel
-        fuzzyScoreInserts.push({
-          orderregel_id: '', // wordt ingevuld na insert
+        localFuzzyScores.push({
+          orderregel_id: '',
           match_term_id: kandidaat.matchTermId,
           score: fuzzy.score,
           term_coverage: fuzzy.termCoverage,
@@ -185,7 +171,6 @@ export async function POST(
         })
       }
 
-      // Sorteer kandidaten op score (hoog naar laag)
       const gesorteerd = Array.from(elementScores.values()).sort((a, b) => b.score - a.score)
       const topKandidaat = gesorteerd[0]
       const tweedeKandidaat = gesorteerd[1]
@@ -205,7 +190,6 @@ export async function POST(
           confidence = 'HIGH'
           matchReasoning = `Automatisch gematcht (score: ${topScore.toFixed(1)})`
         } else if (topScore >= 25) {
-          // Agent 2 voor twijfelgevallen: haal element namen op
           const top3 = gesorteerd.slice(0, 3)
           const elementIds = top3.map(k => k.subgroupElementId)
 
@@ -244,7 +228,6 @@ export async function POST(
         }
       }
 
-      // Gelokaliseerde naam ophalen voor de uitvoertaal
       let localizedNaam: string | null = null
       if (subgroupElementId) {
         const { data: localizedTerm } = await serviceClient
@@ -257,25 +240,31 @@ export async function POST(
         localizedNaam = localizedTerm?.term ?? null
       }
 
-      regelInserts.push({
-        offerte_id: id,
-        regelnummer: regel.regelnummer,
-        omschrijving: regel.omschrijving,
-        details: regel.details,
-        hoeveelheid: regel.hoeveelheid,
-        eenheid: regel.eenheid,
-        stukprijs: regel.stukprijs,
-        totaalprijs: regel.totaalprijs,
-        clean_desc: cleanDesc,
-        clean_details: regel.cleanDetails,
-        category_hint: regel.categoryHint,
-        subgroup_element_id: subgroupElementId,
-        confidence,
-        match_reasoning: matchReasoning,
-        suggested_match_term: suggestedMatchTerm,
-        localized_naam: localizedNaam,
-      })
-    }
+      return {
+        insert: {
+          offerte_id: id,
+          regelnummer: regel.regelnummer,
+          omschrijving: regel.omschrijving,
+          details: regel.details,
+          hoeveelheid: regel.hoeveelheid,
+          eenheid: regel.eenheid,
+          stukprijs: regel.stukprijs,
+          totaalprijs: regel.totaalprijs,
+          clean_desc: cleanDesc,
+          clean_details: regel.cleanDetails,
+          category_hint: regel.categoryHint,
+          subgroup_element_id: subgroupElementId,
+          confidence,
+          match_reasoning: matchReasoning,
+          suggested_match_term: suggestedMatchTerm,
+          localized_naam: localizedNaam,
+        },
+        fuzzyScores: localFuzzyScores,
+      }
+    }))
+
+    const regelInserts = regelResultaten.map(r => r.insert)
+    const fuzzyScoreInserts = regelResultaten.flatMap(r => r.fuzzyScores)
 
     // 8. Orderregels opslaan
     const { data: opgeslagenRegels, error: insertError } = await serviceClient
