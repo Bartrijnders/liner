@@ -49,8 +49,27 @@ export default function OfferteLijst({
     const hasActive = offertes.some((o) => o.status === 'processing' || o.status === 'uploaded')
     if (!hasActive) return
 
+    const supabase = createClient()
+
+    // Reset offertes that have been stuck in 'processing' for more than 5 minutes
+    // (happens when Vercel kills the function on timeout before the catch block runs)
+    const stuckIds = offertes
+      .filter((o) => {
+        if (o.status !== 'processing') return false
+        const age = Date.now() - new Date(o.created_at).getTime()
+        return age > 5 * 60 * 1000
+      })
+      .map((o) => o.id)
+
+    if (stuckIds.length > 0) {
+      supabase
+        .from('offertes')
+        .update({ status: 'error', fout_melding: 'Verwerking duurde te lang (timeout). Probeer opnieuw.' })
+        .in('id', stuckIds)
+        .then(() => {})
+    }
+
     const interval = setInterval(async () => {
-      const supabase = createClient()
       const { data } = await supabase
         .from('offertes')
         .select('id, bestandsnaam, status, fout_melding, storage_path, created_at')

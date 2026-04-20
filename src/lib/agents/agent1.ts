@@ -106,14 +106,14 @@ export async function verwerkAgent1(pdfTekst: string): Promise<Agent1Resultaat[]
     pos = end
   }
 
-  console.log(`[agent1] verwerking in ${chunks.length} chunk(s), totaal ${pdfTekst.length} tekens`)
+  console.log(`[agent1] verwerking in ${chunks.length} chunk(s) parallel, totaal ${pdfTekst.length} tekens`)
 
-  const alleRegels: Agent1Resultaat[] = []
-  for (const chunk of chunks) {
-    const regels = await verwerkChunk(chunk, alleRegels.length)
-    alleRegels.push(...regels)
-  }
+  // Process all chunks in parallel to stay well within Vercel's 60s limit
+  const chunkResultaten = await Promise.all(
+    chunks.map((chunk, i) => verwerkChunk(chunk, i * 50))
+  )
 
+  const alleRegels = chunkResultaten.flat()
   alleRegels.forEach((r, i) => { r.regelnummer = i + 1 })
   return alleRegels
 }
